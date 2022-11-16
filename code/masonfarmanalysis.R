@@ -1,8 +1,8 @@
-################################
+#################################
 
-### Mason Farm AudioMoth EDA ###
+# Mason Farm AudioMoth Analysis #
 
-################################
+#################################
 
 # Load libraries
 library(gsheet)
