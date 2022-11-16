@@ -90,3 +90,42 @@ for (i in 1:nrow(all_compare)) {
   
 }
 
+### Short hand transcription
+
+shorthand = compare %>%
+  group_by(Species) %>%
+  count(n_distinct(Species))
+
+shorthand = shorthand[,c(1)]
+names(shorthand) = c("Abbrev")
+
+shorthand$CommonName = NA
+shorthand$CommonName = c("Acadian Flycatcher", 
+  "American Crow", 
+  "Blue-grey Gnatcatcher",
+  "Brown-headed Cowbird", 
+  "Bluejay",
+  "Carolina Chickadee",
+  "Carolina Wren",
+  "Downy Woodpecker",
+  "Eastern Bluebird",
+  "Eastern Wood Pewee",
+  "Fish Crow",
+  "Great Crested Flycatcher",
+  "Unidentified Hawk",
+  "Hairy Woodpecker",
+  "Mourning Dove",
+  "Northern Cardinal",
+  "Northern Parula",
+  "Pileated Woodpecker",
+  "Red-bellied Woodpecker",
+  "Red-shouldered Hawk",
+  "Red-eyed Vireo",
+  "Scarlet Tanager",
+  "Summer Tanager",
+  "Tufted Titmouse",
+  "White-breasted Nuthatch",
+  "Worm-eating Warbler",
+  "Unidentified Woodpecker",
+  "Yellow-billed Cuckoo",
+  "Yellow-throated Vireo")
