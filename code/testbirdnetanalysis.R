@@ -64,7 +64,7 @@ pointcounts_DF = pointcounts_DF[,c(1, 2, 5, 6, 7)]
 ### Decide what birds are absurd
 ### Filter for confidence interval
 ### Add column that are 1's that indicate detected by BirdNet
-### Merge with pointcount and manual detection dataframe
+### Merge with compare_all dataframe
 
 
 
