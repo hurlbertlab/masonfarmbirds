@@ -9,6 +9,7 @@ library(gsheet)
 library(dplyr)
 library(tidyverse)
 library(stringr)
+library(beepr)
 
 # Read in data
 
@@ -100,44 +101,41 @@ starts = "blank"
 ends = "blank"
 
 # NEED TO RESET DATA FRAME EVERY YOU RUN
-blankdataframe <- pointcounts_DF[1,] 
-blankdataframe$Date <- NA; blankdataframe$SurveyID <- NA; blankdataframe$Stake <- NA; blankdataframe$Period <- NA; blankdataframe$StartTime <- NA; blankdataframe$EndTime <- NA; blankdataframe$BirdnetDetected <- 1;
+output <- data.frame(Start = NULL, End = NULL, Scientific = NULL, Species = NULL, Confidence = NULL, Date = NULL, Stake = NULL, Period = NULL)
 
 # work in progress..........
 # do we need to read in all of the files or can we write them all to a new
 # data frame that houses the birds picked up in each period (group_by), stake
 # surveyID, date, etc., so that we can left_join with all_compare
 
+# make a column in pointcounts_DF that is filename 
+pointcounts_DF$filename <- paste(pointcounts_DF$Date, "_", pointcounts_DF$Stake, ".BirdNET.results.csv", sep = "")
 
-
-
-
+#Filter the birdnet output files to the period start&end times, and add the results to our output dataframe
 for(a in 1:length(bnoutput_files)){
-  filename <- bnoutput_files[a]
-  date = str_sub(filename, start = 1, end = 8)
-  stake = str_sub(filename, start = 10, end = 12)
-  if(substr(stake,3,3) == ".") {
-      stake = substr(stake,1,2)
-  }
-  file = read_csv(paste("data/pointcount_birdnetresults/", filename, sep=""))
-  names(file) = c("Start", "End", "Science", "Species", "Confidence")
-  for(b in 1:nrow(pointcounts_DF)) {
-    for(periodnum in 1:3) {
-  if (stake == pointcounts_DF$Stake[b] && date == pointcounts_DF$Date[b] && periodnum == pointcounts_DF$Period[b]){
-    starts = pointcounts_DF$StartTime[b]
-    ends = pointcounts_DF$EndTime[b]
-    filtered = file %>%
-      filter(Start > starts) %>%
-      filter(End < ends)
-    filtered$Date <- date
-    filtered$Stake <- stake
-    filtered$Period <- periodnum
-  }
-      blankdataframe <- rbind(blankdataframe, filtered)
-    }
-  }
+  birdnetfilename <- bnoutput_files[a]
+  for(periodnum in 1:3) {
+    
+    relevantinformation <- pointcounts_DF %>% filter(filename == birdnetfilename, Period == periodnum)
+    
+  date = relevantinformation$Date
+  stake = relevantinformation$Stake
+  file = read_csv(paste("data/pointcount_birdnetresults/", birdnetfilename, sep=""))
+  names(file) = c("Start", "End", "Scientific", "Species", "Confidence")
+  filtered <- file %>% 
+    filter(Start > relevantinformation$StartTime) %>%
+    filter(End < relevantinformation$EndTime) %>%
+    mutate(Date = date,
+           Stake = stake,
+           Period = periodnum)
   
+  #now add the filtered data to out output dataset
+  output <- rbind(output, filtered)
+  }
   
 }
+beep()
+
+
 
 table(blankdataframe$Stake, blankdataframe$Date)
