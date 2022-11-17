@@ -20,6 +20,50 @@ pointcounts = gsheet2tbl(pointcountURL)
 
 missed = gsheet2tbl(missedbirdsURL)
 
+# Read in compiled BirdNET CSV
+birdnet_output = read_csv("data/CompiledBirdNetResults_2019PointCounts.csv")
+birdnet_output = birdnet_output[,c(2, 3, 4, 5, 6, 7, 8, 9)]
+
+### Short hand transcription
+
+shorthand = compare %>%
+  group_by(Species) %>%
+  count(n_distinct(Species))
+
+shorthand = shorthand[,c(1)]
+names(shorthand) = c("Abbrev")
+
+shorthand$CommonName = NA
+shorthand$CommonName = c("Acadian Flycatcher", 
+                         "American Crow", 
+                         "Blue-gray Gnatcatcher",
+                         "Brown-headed Cowbird", 
+                         "Blue Jay",
+                         "Carolina Chickadee",
+                         "Carolina Wren",
+                         "Downy Woodpecker",
+                         "Eastern Bluebird",
+                         "Eastern Wood Pewee",
+                         "Fish Crow",
+                         "Great Crested Flycatcher",
+                         "Unidentified Hawk",
+                         "Hairy Woodpecker",
+                         "Mourning Dove",
+                         "Northern Cardinal",
+                         "Northern Parula",
+                         "Pileated Woodpecker",
+                         "Red-bellied Woodpecker",
+                         "Red-shouldered Hawk",
+                         "Red-eyed Vireo",
+                         "Scarlet Tanager",
+                         "Summer Tanager",
+                         "Tufted Titmouse",
+                         "White-breasted Nuthatch",
+                         "Worm-eating Warbler",
+                         "Unidentified Woodpecker",
+                         "Yellow-billed Cuckoo",
+                         "Yellow-throated Vireo")
+
 ################################
 
 ### Exploratory data analysis
@@ -80,8 +124,6 @@ compare$ObserverDetected = 1
 
 comparison = compare[,c(1, 2, 3, 4, 5, 6, 9)]
 
-all_compare = merge(comparison, manual, by=c("SurveyID", "Stake", "Observer", "Species", "Period", "AudiomothDetected"), all.x = TRUE, all.y = TRUE)
-
 # For loop changing NA to 0
 for (i in 1:nrow(all_compare)) {
   if (is.na(all_compare$ObserverDetected[i]) == TRUE){
@@ -90,43 +132,35 @@ for (i in 1:nrow(all_compare)) {
   
 }
 
-### Short hand transcription
 
-shorthand = compare %>%
-  group_by(Species) %>%
-  count(n_distinct(Species))
 
-shorthand = shorthand[,c(1)]
-names(shorthand) = c("Abbrev")
+# How to merge the abbreviations with the all_compare, while also bringing over the birds that are not included
+# in the shorthand abbrev bc theyre not common?
 
-shorthand$CommonName = NA
-shorthand$CommonName = c("Acadian Flycatcher", 
-  "American Crow", 
-  "Blue-grey Gnatcatcher",
-  "Brown-headed Cowbird", 
-  "Bluejay",
-  "Carolina Chickadee",
-  "Carolina Wren",
-  "Downy Woodpecker",
-  "Eastern Bluebird",
-  "Eastern Wood Pewee",
-  "Fish Crow",
-  "Great Crested Flycatcher",
-  "Unidentified Hawk",
-  "Hairy Woodpecker",
-  "Mourning Dove",
-  "Northern Cardinal",
-  "Northern Parula",
-  "Pileated Woodpecker",
-  "Red-bellied Woodpecker",
-  "Red-shouldered Hawk",
-  "Red-eyed Vireo",
-  "Scarlet Tanager",
-  "Summer Tanager",
-  "Tufted Titmouse",
-  "White-breasted Nuthatch",
-  "Worm-eating Warbler",
-  "Unidentified Woodpecker",
-  "Yellow-billed Cuckoo",
-  "Yellow-throated Vireo")
+# BirdNET 50% Threshold
+
+birdnet_50 <- birdnet_output %>%
+  filter(Confidence >= 0.5) %>%
+  select(Date, Stake, Period, Start, End, Scientific, Species, Confidence) %>%
+  distinct(Date, Stake, Period, Species) %>%
+  mutate(BirdNET50_Detected = 1, CommonName = Species) %>%
+  left_join(shorthand, by = c("CommonName"))
+
+#### Shall we also do 60, 70, 80, 90?
+
+
+
+
+
+
+
+
+
+all_compare = merge(comparison, manual, by=c("SurveyID", "Stake", "Observer", "Species", "Period", "AudiomothDetected"), all.x = TRUE, all.y = TRUE)
+
+
+
+
+
+
 
