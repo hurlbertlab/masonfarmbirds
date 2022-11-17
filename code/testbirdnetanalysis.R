@@ -136,6 +136,12 @@ for(a in 1:length(bnoutput_files)){
 }
 beep()
 
+write.csv(output, paste("data/CompiledBirdNetResults_2019PointCounts.csv", sep = ""))
 
+hist(output$Confidence)
+table(output$Species)
+output %>% filter(Species == "Eastern Towhee") 
+hist(output$Confidence[output$Species == "Eastern Towhee"])
+table(output$Stake[output$Species == "Eastern Towhee"])
 
 table(blankdataframe$Stake, blankdataframe$Date)
