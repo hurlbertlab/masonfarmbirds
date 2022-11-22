@@ -24,46 +24,6 @@ missed = gsheet2tbl(missedbirdsURL)
 birdnet_output = read_csv("data/CompiledBirdNetResults_2019PointCounts.csv")
 birdnet_output = birdnet_output[,c(2, 3, 4, 5, 6, 7, 8, 9)]
 
-### Short hand transcription
-
-shorthand = compare %>%
-  group_by(Species) %>%
-  count(n_distinct(Species))
-
-shorthand = shorthand[,c(1)]
-names(shorthand) = c("Abbrev")
-
-shorthand$CommonName = NA
-shorthand$CommonName = c("Acadian Flycatcher", 
-                         "American Crow", 
-                         "Blue-gray Gnatcatcher",
-                         "Brown-headed Cowbird", 
-                         "Blue Jay",
-                         "Carolina Chickadee",
-                         "Carolina Wren",
-                         "Downy Woodpecker",
-                         "Eastern Bluebird",
-                         "Eastern Wood Pewee",
-                         "Fish Crow",
-                         "Great Crested Flycatcher",
-                         "Unidentified Hawk",
-                         "Hairy Woodpecker",
-                         "Mourning Dove",
-                         "Northern Cardinal",
-                         "Northern Parula",
-                         "Pileated Woodpecker",
-                         "Red-bellied Woodpecker",
-                         "Red-shouldered Hawk",
-                         "Red-eyed Vireo",
-                         "Scarlet Tanager",
-                         "Summer Tanager",
-                         "Tufted Titmouse",
-                         "White-breasted Nuthatch",
-                         "Worm-eating Warbler",
-                         "Unidentified Woodpecker",
-                         "Yellow-billed Cuckoo",
-                         "Yellow-throated Vireo")
-
 ################################
 
 ### Exploratory data analysis
@@ -102,20 +62,11 @@ overallSummary$missByManual[is.na(overallSummary$missByManual)] = 0
 overallSummary$missByObserver[is.na(overallSummary$missByObserver)] = 0
 
 
-# Add species missed by observers to data summary
-birdsum = left_join(birdsummary, observermissed, by=c("Species", "Observer"))
-
-# For loop changing NA to 0
-for (i in 1:nrow(birdsum)) {
-  if (is.na(birdsum$ObserverMiss[i]) == TRUE){
-    birdsum$ObserverMiss[i] = 0
-  }
-  
-}
-
 ################################
 
 ### BirdNet Output Analysis
+
+# Goal here is to mark a 1 or a 0 for whether or not it was picked up in a period
 
 # Making df with distinct periods, observer, and species combo to compare birdnet, audiomoth, and observer
 
@@ -139,15 +90,45 @@ compare$ObserverDetected = 1
 
 comparison = compare[,c(1, 2, 3, 4, 5, 6, 9)]
 
-# For loop changing NA to 0
-for (i in 1:nrow(all_compare)) {
-  if (is.na(all_compare$ObserverDetected[i]) == TRUE){
-    all_compare$ObserverDetected[i] = 0
-  }
-  
-}
+### Short hand transcription - do not move, needs to be after compare
 
+shorthand = compare %>%
+  group_by(Species) %>%
+  count(n_distinct(Species))
 
+shorthand = shorthand[,c(1)]
+names(shorthand) = c("Abbrev")
+
+shorthand$CommonName = NA
+shorthand$CommonName = c("Acadian Flycatcher", 
+                         "American Crow", 
+                         "Blue-gray Gnatcatcher",
+                         "Brown-headed Cowbird", 
+                         "Blue Jay",
+                         "Carolina Chickadee",
+                         "Carolina Wren",
+                         "Downy Woodpecker",
+                         "Eastern Bluebird",
+                         "Eastern Wood Pewee",
+                         "Fish Crow",
+                         "Great Crested Flycatcher",
+                         "Unidentified Hawk",
+                         "Hairy Woodpecker",
+                         "Mourning Dove",
+                         "Northern Cardinal",
+                         "Northern Parula",
+                         "Pileated Woodpecker",
+                         "Red-bellied Woodpecker",
+                         "Red-shouldered Hawk",
+                         "Red-eyed Vireo",
+                         "Scarlet Tanager",
+                         "Summer Tanager",
+                         "Tufted Titmouse",
+                         "White-breasted Nuthatch",
+                         "Worm-eating Warbler",
+                         "Unidentified Woodpecker",
+                         "Yellow-billed Cuckoo",
+                         "Yellow-throated Vireo")
 
 # How to merge the abbreviations with the all_compare, while also bringing over the birds that are not included
 # in the shorthand abbrev bc theyre not common?
