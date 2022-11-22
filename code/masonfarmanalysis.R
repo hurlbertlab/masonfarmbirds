@@ -69,33 +69,48 @@ shorthand$CommonName = c("Acadian Flycatcher",
 ### Exploratory data analysis
 
 # Summarize data
-birdsummary = pointcounts %>%
-  group_by(Species, Observer) %>%
-  summarize(numPeriods = n_distinct(SurveyID, Period),
-            AMmiss = sum(AudiomothDetected == 0)) %>%
-  arrange(desc(numPeriods))
 
-# Audiomoth misses and detected
-num_misses = pointcounts %>%
-  count(AudiomothDetected)
+# Calculating number of periods each species (by observer) occurred in
+foo = pointcounts %>%
+  distinct(Observer, Species, SurveyID, Period)
+
+numPeriodsPerObserverSpecies = missed %>%
+  rename(Species = ManualSpeciesDetection) %>%
+  distinct(Observer, Species, SurveyID, Period) %>%
+  rbind(foo) %>%
+  distinct(Observer, Species, SurveyID, Period) %>%
+  count(Observer, Species) %>%
+  rename(totalNumPeriods = n)
+
+pointCountSummary = pointcounts %>%
+  group_by(Species, Observer) %>%
+  summarize(missByManual = sum(AudiomothDetected == 0))
+
 
 # Find species missed by observers
-observermissed = missed %>%
-  group_by(ManualSpeciesDetection, Observer) %>%
-  count(n_distinct(SurveyID, ManualSpeciesDetection))
+manualSummary = missed %>%
+  rename(Species = ManualSpeciesDetection) %>%
+  group_by(Species, Observer) %>%
+  summarize(missByObserver = n_distinct(SurveyID, Species))
 
-o_missed = observermissed[,c(1, 2, 4)]
-names(o_missed) = c("Species", "Observer", "ObserverMiss")
+
+overallSummary = numPeriodsPerObserverSpecies %>%
+  left_join(pointCountSummary, by = c("Species", "Observer")) %>%
+  left_join(manualSummary, by = c("Species", "Observer"))
+
+overallSummary$missByManual[is.na(overallSummary$missByManual)] = 0
+overallSummary$missByObserver[is.na(overallSummary$missByObserver)] = 0
+
 
 # Add species missed by observers to data summary
-birdsum = left_join(birdsummary, o_missed, by=c("Species", "Observer"))
+birdsum = left_join(birdsummary, observermissed, by=c("Species", "Observer"))
 
 # For loop changing NA to 0
 for (i in 1:nrow(birdsum)) {
   if (is.na(birdsum$ObserverMiss[i]) == TRUE){
     birdsum$ObserverMiss[i] = 0
   }
-    
+  
 }
 
 ################################

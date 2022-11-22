@@ -120,10 +120,11 @@ beep()
 # Write out CSV of compiled birdnet outputs
 write.csv(output, paste("data/CompiledBirdNetResults_2019PointCounts.csv", sep = ""))
 
-hist(output$Confidence)
+
+
+# Some prelim analysis
+hist(output$Confidence, main = paste("Histogram of Confidence"), xlab = "Confidence")
 table(output$Species)
 output %>% filter(Species == "Eastern Towhee") 
 hist(output$Confidence[output$Species == "Swainson's Warbler"])
 table(output$Stake[output$Species == "Eastern Towhee"])
-
-table(blankdataframe$Stake, blankdataframe$Date)
