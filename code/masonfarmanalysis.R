@@ -9,6 +9,7 @@ library(gsheet)
 library(dplyr)
 library(tidyverse)
 library(stringr)
+library(ggrepel)
 
 ### Read in data
 pointcountURL = 'https://docs.google.com/spreadsheets/d/1TzHlLGW95utQSb62aXR-ksdh01Egmipqc1ypSJYpl6U/edit#gid=23822252'
@@ -130,33 +131,171 @@ shorthand$CommonName = c("Acadian Flycatcher",
                          "Yellow-billed Cuckoo",
                          "Yellow-throated Vireo")
 
-# How to merge the abbreviations with the all_compare, while also bringing over the birds that are not included
-# in the shorthand abbrev bc theyre not common?
+### Working w Comparison
+
+# Adding dates to comparison so that merging is easier
+for (i in 1:nrow(comparison)) {
+  if (comparison$SurveyID[i] < 9) {
+    comparison$Date[i] = "20190612"
+  }
+  if (comparison$SurveyID[i] > 9 && comparison$SurveyID[i] < 17) {
+    comparison$Date[i] = "20190617"
+  }
+  if (comparison$SurveyID[i] > 17 && comparison$SurveyID[i] < 25) {
+    comparison$Date[i] = "20190618"
+  }
+  if (comparison$SurveyID[i] > 25 && comparison$SurveyID[i] < 33) {
+    comparison$Date[i] = "20190619"
+  }
+  if (comparison$SurveyID[i] > 33) {
+    comparison$Date[i] = "20190629"
+  }
+}
+
+# Converting Short Hand to Long Names in Comparison
+
+comparison$SpeciesName <- with(
+  shorthand,
+  CommonName[match(comparison$Species, Abbrev)]
+)
+
+comparison2 <- comparison[,c(8, 2, 9, 5, 6, 7)]
+names(comparison2)[names(comparison2) == 'SpeciesName'] <- 'Species'
+
+
+
+# BirdNET Distinct
+birdnet_dist <- birdnet_output %>% 
+  distinct(Date, Stake, Period, Species)
+
+# Number of birds detected with no min confidence
+num_dist_birds <- nrow(birdnet_dist)
+
+ggplot(birdnet_dist, aes(x = Species)) +
+  geom_bar(binwidth = 1) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 # BirdNET 50% Threshold
 
 birdnet_50 <- birdnet_output %>%
   filter(Confidence >= 0.5) %>%
   select(Date, Stake, Period, Start, End, Scientific, Species, Confidence) %>%
-  distinct(Date, Stake, Period, Species) %>%
-  mutate(BirdNET50_Detected = 1, CommonName = Species) %>%
-  left_join(shorthand, by = c("CommonName"))
+  distinct(Date, Stake, Period, Species)
 
-#### Shall we also do 60, 70, 80, 90?
+birdnet_50$BirdNET50Detected <- 1
 
+birdnet_50$Date <- as.character(birdnet_50$Date)
+birdnet_50$Period <- as.character(birdnet_50$Period)
 
+all_compare = comparison2 %>%
+  merge(birdnet_50, by = c("Date", "Stake", "Period", "Species"), all.x = TRUE, all.y = TRUE)
 
-
-
-
-
-
-
-all_compare = merge(comparison, manual, by=c("SurveyID", "Stake", "Observer", "Species", "Period", "AudiomothDetected"), all.x = TRUE, all.y = TRUE)
+all_compare$AudiomothDetected[is.na(all_compare$AudiomothDetected)] = 0
+all_compare$ObserverDetected[is.na(all_compare$ObserverDetected)] = 0
+all_compare$BirdNET50Detected[is.na(all_compare$BirdNET50Detected)] = 0
 
 
+# Number of bird detected with a 50% threshold
+
+num_50_birds <- nrow(birdnet_50)
+
+ggplot(birdnet_50, aes(x = Species)) +
+  geom_bar(binwidth = 1) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+birdnet_50$BirdNET50Detected <- 1
+
+# Prepping for merge
+birdnet_50$Date <- as.character(birdnet_50$Date)
+birdnet_50$Period <- as.character(birdnet_50$Period)
+
+# BirdNET 60%+ Threshold
+
+birdnet_60 <- birdnet_output %>%
+  filter(Confidence >= 0.6) %>%
+  select(Date, Stake, Period, Start, End, Scientific, Species, Confidence) %>%
+  distinct(Date, Stake, Period, Species)
+
+birdnet_60$BirdNET60Detected <- 1
+
+birdnet_60$Date <- as.character(birdnet_60$Date)
+birdnet_60$Period <- as.character(birdnet_60$Period)
+
+birdnet_70 <- birdnet_output %>%
+  filter(Confidence >= 0.7) %>%
+  select(Date, Stake, Period, Start, End, Scientific, Species, Confidence) %>%
+  distinct(Date, Stake, Period, Species)
+
+birdnet_70$BirdNET70Detected <- 1
+
+birdnet_70$Date <- as.character(birdnet_70$Date)
+birdnet_70$Period <- as.character(birdnet_70$Period)
+
+birdnet_80 <- birdnet_output %>%
+  filter(Confidence >= 0.8) %>%
+  select(Date, Stake, Period, Start, End, Scientific, Species, Confidence) %>%
+  distinct(Date, Stake, Period, Species)
+
+birdnet_80$BirdNET80Detected <- 1
+
+birdnet_80$Date <- as.character(birdnet_80$Date)
+birdnet_80$Period <- as.character(birdnet_80$Period)
+
+birdnet_90 <- birdnet_output %>%
+  filter(Confidence >= 0.9) %>%
+  select(Date, Stake, Period, Start, End, Scientific, Species, Confidence) %>%
+  distinct(Date, Stake, Period, Species)
+
+birdnet_90$BirdNET90Detected <- 1
+
+birdnet_90$Date <- as.character(birdnet_90$Date)
+birdnet_90$Period <- as.character(birdnet_90$Period)
+
+### Merge BirdNET Outputs - form all_compare
+
+all_compare = comparison2 %>%
+  merge(birdnet_50, by = c("Date", "Stake", "Period", "Species"), all.x = TRUE, all.y = TRUE)  %>%
+  left_join(birdnet_60, by = c("Date", "Stake", "Period", "Species")) %>%
+  left_join(birdnet_70, by = c("Date", "Stake", "Period", "Species")) %>%
+  left_join(birdnet_80, by = c("Date", "Stake", "Period", "Species"))
+
+all_compare$AudiomothDetected[is.na(all_compare$AudiomothDetected)] = 0
+all_compare$ObserverDetected[is.na(all_compare$ObserverDetected)] = 0
+all_compare$BirdNET50Detected[is.na(all_compare$BirdNET50Detected)] = 0
+all_compare$BirdNET60Detected[is.na(all_compare$BirdNET60Detected)] = 0
+all_compare$BirdNET70Detected[is.na(all_compare$BirdNET70Detected)] = 0
+all_compare$BirdNET80Detected[is.na(all_compare$BirdNET80Detected)] = 0
 
 
+# Find Props Detected BirdNET + Manual
+AMBN_Compare <- all_compare[,c(1, 2, 3, 4, 5, 7, 8, 9, 10)]
 
+numPeriodsAMBN = AMBN_Compare %>%
+  distinct(Date, Stake, Species, Period) %>%
+  count(Species) %>%
+  rename(totalNumPeriods = n)
 
+AMBN_detection = AMBN_Compare %>%
+  group_by(Species) %>%
+  summarize(ManualDetect = sum(AudiomothDetected == 1), BN50Detect = sum(BirdNET50Detected == 1), BN60Detect = sum(BirdNET60Detected == 1), 
+            BN70Detect = sum(BirdNET70Detected == 1), BN80Detect = sum(BirdNET80Detected == 1)) %>%
+  left_join(numPeriodsAMBN, by = c("Species"))
+
+AMBN_detection$BN50PropDetect = AMBN_detection$BN50Detect / AMBN_detection$totalNumPeriods
+AMBN_detection$ManualPropDetect = AMBN_detection$ManualDetect / AMBN_detection$totalNumPeriods
+
+ggplot(AMBN_detection, aes(x = BN50PropDetect, y = ManualPropDetect, label = Species)) +
+  geom_point() +
+  geom_label_repel(aes(label = Species),
+                   box.padding   = 0.8, 
+                   point.padding = 0.5,
+                   segment.color = 'grey50',
+                   label.size = 0.05,
+                   max.overlaps = 30) 
+
+# Finding margin of error of all birds 
+rerror50percent <- (abs(sum(AMBN_detection$BN50Detect) - sum(AMBN_detection$totalNumPeriods)) / sum(AMBN_detection$totalNumPeriods))*100
+rerror60percent <- (abs(sum(AMBN_detection$BN60Detect) - sum(AMBN_detection$totalNumPeriods)) / sum(AMBN_detection$totalNumPeriods))*100
+rerror70percent <- (abs(sum(AMBN_detection$BN70Detect) - sum(AMBN_detection$totalNumPeriods)) / sum(AMBN_detection$totalNumPeriods))*100
+rerror80percent <- (abs(sum(AMBN_detection$BN80Detect) - sum(AMBN_detection$totalNumPeriods)) / sum(AMBN_detection$totalNumPeriods))*100
 
