@@ -171,7 +171,19 @@ birdnet_dist <- birdnet_output %>%
 # Number of birds detected with no min confidence
 num_dist_birds <- nrow(birdnet_dist)
 
-ggplot(birdnet_dist, aes(x = Species)) +
+birdnet_dist2 <- birdnet_dist %>%
+  count(Species) %>%
+  rename(Number = n)
+
+ggplot(birdnet_dist2, aes(x = reorder(Species, -Number), y = Number)) +
+  geom_bar(binwidth = 1, stat = "identity") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  ggtitle('Birds Detected by BirdNET with No Minimum Confidence') +
+  theme(text = element_text(size = 10)) +
+  ylab("Count") +
+  xlab("Species")
+
+ggplot(birdnet_dist, aes(x=Species)) +
   geom_bar(binwidth = 1) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   ggtitle('Birds Detected by BirdNET with No Minimum Confidence') +
@@ -201,11 +213,17 @@ all_compare$BirdNET50Detected[is.na(all_compare$BirdNET50Detected)] = 0
 
 num_50_birds <- nrow(birdnet_50)
 
-ggplot(birdnet_50, aes(x = Species)) +
-  geom_bar(binwidth = 1) +
+birdnet_50_2 <- birdnet_50 %>%
+  count(Species) %>%
+  rename(Number = n)
+
+ggplot(birdnet_50_2, aes(x = reorder(Species, -Number), y = Number)) +
+  geom_bar(binwidth = 1, stat = "identity") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   ggtitle('Birds Detected by BirdNET with a Min Confidence of 50%') +
-  theme(text = element_text(size = 20))
+  theme(text = element_text(size = 15))+
+  ylab("Count") +
+  xlab("Species")
 
 birdnet_50$BirdNET50Detected <- 1
 
@@ -307,9 +325,16 @@ num_60_birds <- nrow(birdnet_60)
 num_70_birds <- nrow(birdnet_70)
 num_80_birds <- nrow(birdnet_80)
 
-ggplot(AMBN_detection, aes(x = Species, y = ManualDetect)) +
+AMBN_detection2<- AMBN_detection %>%
+  filter(ManualDetect != 0)
+  
+ggplot(AMBN_detection2, aes(x = reorder(Species, -ManualDetect), y = ManualDetect)) +
   geom_bar(binwidth = 1, stat="identity") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   ggtitle('Birds Detected by Manual Detection') +
-  theme(text = element_text(size = 20))
+  theme(text = element_text(size = 20)) +
+  xlab("Species") +
+  ylab("Count")
+
+
 
