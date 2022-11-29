@@ -23,12 +23,18 @@ misses_props = overallSummary %>%
   filter(Species != ("YTV"))
 
 #proportion missed comparing observers in point counts
-ggplot(misses_props, aes(fill = Observer, x = Species, y = PropMissedbyObserver)) +
-  geom_bar(position = "dodge", stat="identity")
+ggplot(misses_props, aes(fill = Observer, x = reorder(Species, -PropMissedbyObserver), y = PropMissedbyObserver)) +
+  geom_bar(position = "dodge", stat="identity")+
+  xlab("Species") +
+  ylab("Proportion Missed by Observer") +
+  ggtitle("Proportion of Birds Missed")
 
 #frequency missed comparing observers in point counts
-ggplot(misses_props, aes(fill = Observer, x = Species, y = missByObserver)) +
-  geom_bar(position = "dodge", stat="identity")
+ggplot(misses_props, aes(fill = Observer, x = reorder(Species, -missByObserver), y = missByObserver)) +
+  geom_bar(position = "dodge", stat="identity")+
+  xlab("Species") +
+  ylab("Total Number of Birds Missed by Observer") +
+  ggtitle("Total Number of Birds Missed by Occurance")
 
 
 # creating grouped bar plot comparing total missed by manual and total missed by point counts
@@ -54,12 +60,18 @@ comparetomanual = comparetomanual %>%
   filter(Species != ("SUT")) 
 
 #Proportion missed comparing point counts to manual
-ggplot(comparetomanual, aes(fill = Observer, x = Species, y = PropMissed)) +
-  geom_bar(position = "dodge", stat="identity")
+ggplot(comparetomanual, aes(fill = Observer, x = reorder(Species, -PropMissed), y = PropMissed)) +
+  geom_bar(position = "dodge", stat="identity") +
+  xlab("Species") +
+  ylab("Proportion of Birds Missed") +
+  ggtitle("Proportion of Birds Missed by Manual Detection versus Observers")
 
 #Frequency missed comparing point counts to manual
-ggplot(comparetomanual, aes(fill = Observer, x = Species, y = TotalMissed)) +
-  geom_bar(position = "dodge", stat="identity")
+ggplot(comparetomanual, aes(fill = Observer, x = reorder(Species, -TotalMissed), y = TotalMissed)) +
+  geom_bar(position = "dodge", stat="identity")+
+  xlab("Species") +
+  ylab("Total Number of Birds Missed") +
+  ggtitle("Total Number of Birds Missed: Manual Detection versus Observers")
 
 
 
