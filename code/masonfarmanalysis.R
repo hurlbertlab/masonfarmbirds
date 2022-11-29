@@ -110,7 +110,7 @@ shorthand$CommonName = c("Acadian Flycatcher",
                          "Carolina Wren",
                          "Downy Woodpecker",
                          "Eastern Bluebird",
-                         "Eastern Wood Pewee",
+                         "Eastern Wood-Pewee",
                          "Fish Crow",
                          "Great Crested Flycatcher",
                          "Unidentified Hawk",
@@ -173,7 +173,9 @@ num_dist_birds <- nrow(birdnet_dist)
 
 ggplot(birdnet_dist, aes(x = Species)) +
   geom_bar(binwidth = 1) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  ggtitle('Birds Detected by BirdNET with No Minimum Confidence') +
+  theme(text = element_text(size = 15))
 
 # BirdNET 50% Threshold
 
@@ -201,7 +203,9 @@ num_50_birds <- nrow(birdnet_50)
 
 ggplot(birdnet_50, aes(x = Species)) +
   geom_bar(binwidth = 1) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  ggtitle('Birds Detected by BirdNET with a Min Confidence of 50%') +
+  theme(text = element_text(size = 20))
 
 birdnet_50$BirdNET50Detected <- 1
 
@@ -293,9 +297,19 @@ ggplot(AMBN_detection, aes(x = BN50PropDetect, y = ManualPropDetect, label = Spe
                    label.size = 0.05,
                    max.overlaps = 30) 
 
-# Finding margin of error of all birds 
+# Finding rate of error of all birds 
 rerror50percent <- (abs(sum(AMBN_detection$BN50Detect) - sum(AMBN_detection$totalNumPeriods)) / sum(AMBN_detection$totalNumPeriods))*100
 rerror60percent <- (abs(sum(AMBN_detection$BN60Detect) - sum(AMBN_detection$totalNumPeriods)) / sum(AMBN_detection$totalNumPeriods))*100
 rerror70percent <- (abs(sum(AMBN_detection$BN70Detect) - sum(AMBN_detection$totalNumPeriods)) / sum(AMBN_detection$totalNumPeriods))*100
 rerror80percent <- (abs(sum(AMBN_detection$BN80Detect) - sum(AMBN_detection$totalNumPeriods)) / sum(AMBN_detection$totalNumPeriods))*100
+
+num_60_birds <- nrow(birdnet_60)
+num_70_birds <- nrow(birdnet_70)
+num_80_birds <- nrow(birdnet_80)
+
+ggplot(AMBN_detection, aes(x = Species, y = ManualDetect)) +
+  geom_bar(binwidth = 1, stat="identity") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  ggtitle('Birds Detected by Manual Detection') +
+  theme(text = element_text(size = 20))
 
