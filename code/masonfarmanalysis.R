@@ -43,16 +43,20 @@ numPeriodsPerObserverSpecies = missed %>%
   count(Observer, Species) %>%
   rename(totalNumPeriods = n)
 
+# Count the number of point count periods in which a species was detected in the point count but not via AudioMoth
 pointCountSummary = pointcounts %>%
   group_by(Species, Observer) %>%
   summarize(missByManual = sum(AudiomothDetected == 0))
 
 
 # Find species missed by observers
+# NOTE: Isn't the intention to count the number of point count periods in which the species was missed by counters?
+#       In which case, we need to put Period in n_distinct()
+#       Previously, it was counting the number of unique 9-minute point counts.
 manualSummary = missed %>%
   rename(Species = ManualSpeciesDetection) %>%
   group_by(Species, Observer) %>%
-  summarize(missByObserver = n_distinct(SurveyID, Species))
+  summarize(missByObserver = n_distinct(SurveyID, Period))  # changed from n_distinct(SurveyID, Species)
 
 
 overallSummary = numPeriodsPerObserverSpecies %>%
