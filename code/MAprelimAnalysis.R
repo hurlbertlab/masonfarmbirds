@@ -6,21 +6,9 @@ overallSummary$PropMissedbyManual = overallSummary$missByManual / overallSummary
 
 # creating grouped bar plot for proportion observer missed and manual missed
 
+# NOTE: see below for a more concise way of filtering all of those species in one line
 misses_props = overallSummary %>%
-  filter(Species != ("Hawk")) %>%
-  filter(Species != ("BHCO")) %>%
-  filter(Species != ("DW")) %>%
-  filter(Species != ("EABL")) %>%
-  filter(Species != ("FICR")) %>%
-  filter(Species != ("GCF")) %>%
-  filter(Species != ("HWP")) %>%
-  filter(Species != ("NC")) %>%
-  filter(Species != ("PW")) %>%
-  filter(Species != ("RSH")) %>%
-  filter(Species != ("SCT")) %>%
-  filter(Species != ("SUT")) %>%
-  filter(Species != ("WP")) %>%
-  filter(Species != ("YTV"))
+  filter(!Species %in% c("Hawk", "BHCO", "DW", "EABL", "FICR", "GCF", "HWP", "NC", "PW", "RSH", "SCT", "SUT", "WP", "YTV"))
 
 #proportion missed comparing observers in point counts
 ggplot(misses_props, aes(fill = Observer, x = reorder(Species, -PropMissedbyObserver), y = PropMissedbyObserver)) +
@@ -43,14 +31,18 @@ comparePCtoManual <- overallSummary[c(2, 3, 4, 5)] %>%
   group_by(Species) %>%
   summarize(totalNumPeriodsAG = sum(totalNumPeriods), totalMissedManual = sum(missByManual), 
             totalMissedObserver = sum(missByObserver))
-comparePCtoManual <- aggregate(comparePCtoManual$totalNumPeriods, list=comparePCtoManual$Species, FUN=sum)
+
+# what was the purpose of this line? was it an old attempt?
+#comparePCtoManual <- aggregate(comparePCtoManual$totalNumPeriods, list=comparePCtoManual$Species, FUN=sum)
 
 
 comparePCtoManual$PropObserverMissed = comparePCtoManual$totalMissedObserver / comparePCtoManual$totalNumPeriodsAG
 comparePCtoManual$PropManualMissed = comparePCtoManual$totalMissedManual / comparePCtoManual$totalNumPeriodsAG
 
+# There is no object called 'comparetomanual', only comparePCtoManual, so this and subsequent lines error
 names(comparetomanual) <- c("Observer", "Species", "TotalAgPeriods", "TotalMissed", "PropMissed") 
 
+# Why where these species being filtered out? Explain why with a comment
 comparetomanual = comparetomanual %>%
   filter(Species != ("EABL")) %>%
   filter(Species != ("FICR")) %>%
