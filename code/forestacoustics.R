@@ -19,8 +19,8 @@ output
 
 file_names <- list.files("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/")
 
+### WIP
 
-### This is not working
 # Convert all to wav...
 for (i in (1:length(file_names))){
   writeWave(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/", file_names[i], sep=""), filename = paste(file_names[i], ".wav", sep = ""),extensible=FALSE)
