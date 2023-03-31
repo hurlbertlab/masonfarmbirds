@@ -1,47 +1,155 @@
 library(tuneR)
 library(warbleR)
 library(seewave)
+library(stringr)
+library(dplyr)
 
-## Sound Pressure Level (dB)
+#########################################
+###### Forest Acoustics Analysis   ######
+###### Last update: 3/31/23        ######
+#########################################
 
-onemp3 <- readMP3("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/13_25E_AF_100.mp3")  ## assuming file is in your working directory!
+##### Problems to fix:
+# - trim .mp3 off of all of the mp3 names bc its very confusing to have .mp3.wav
+# - in analysis, there should be a way to simply change a variable name and analyze a different date - rn it hardcoded 
 
-writeWave(onemp3,"onetmp.wav",extensible=FALSE)
+######
 
-selec_table = data.frame(sound.files = 'onetmp.wav', selec = 1, start = 0, end = 100, bottom.freq = 2000, top.freq = 8000)
-
-output = sound_pressure_level(selec_table, path='temp')
-
-output
-
-
-# Now w our files...
+# All file names
 
 file_names <- list.files("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/")
 
-### WIP
+# Convert all files to .wav (not necessary for seewave analysis, but necessary for warbleR and others -- ignore for now)
 
-# Convert all to wav...
 for (i in (1:length(file_names))){
-  writeWave(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/", file_names[i], sep=""), filename = paste(file_names[i], ".wav", sep = ""),extensible=FALSE)
+  tmpmp3 <- readMP3(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/", file_names[i], sep=""))
+  writeWave(tmpmp3, filename = paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Wav/", file_names[i], ".wav", sep = ""))
 }
 
-data = data.frame(sound.files = file_names, selec = (1:135), start = 0, end = 20, bottom.freq = 2000, top.freq = 8000)
+##### Visualizing all principal calls
 
-output = sound_pressure_level(data[1,], path='../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/')
+# List of principal recording files
+
+principal_calls <- list.files("../../OneDriveUNC/AudioMoths/ForestAcoustics/PricipalRecordings/mp3/")
+
+# We're going to look at each call specifically
+
+# AF
+
+afmp3 <- readMP3("../../OneDriveUNC/AudioMoths/ForestAcoustics/PricipalRecordings/mp3/AF_XC583856_clipped.mp3")
+af_amps = seewave::spec(afmp3) %>%   # get a plot of amplitude (dB) vs frequency for the recording
+  data.frame()
+head(af_amps)                    # this just creates a matrix of the x and y values of that plot
+
+max_amplitude_af = max(af_amps[,2])
+
+freq_at_max_amp_af <- af_amps$x[af_amps$y == max_amplitude_af]
+
+# CW
+
+cw5mp3 <- readMP3("../../OneDriveUNC/AudioMoths/ForestAcoustics/PricipalRecordings/mp3/CW_XC738783_clipped5.mp3")
+cw5_amps = seewave::spec(cw5mp3) %>%   # get a plot of amplitude (dB) vs frequency for the recording
+  data.frame()
+head(cw5_amps)                    # this just creates a matrix of the x and y values of that plot
+
+max_amplitude_cw5 = max(cw5_amps[,2])
+
+freq_at_max_amp_cw5 <- cw5_amps$x[cw5_amps$y == max_amplitude_cw5]
+
+# YBC
+
+ybcmp3 <- readMP3("../../OneDriveUNC/AudioMoths/ForestAcoustics/PricipalRecordings/mp3/YBC_XC20962.mp3")
+ybc_amps = seewave::spec(ybcmp3) %>%   # get a plot of amplitude (dB) vs frequency for the recording
+  data.frame()
+head(ybc_amps)                    # this just creates a matrix of the x and y values of that plot
+
+max_amplitude_ybc = max(ybc_amps[,2])
+
+freq_at_max_amp_ybc <- ybc_amps$x[ybc_amps$y == max_amplitude_ybc]
+
+
+# EWP
+
+ewpmp3 <- readMP3("../../OneDriveUNC/AudioMoths/ForestAcoustics/PricipalRecordings/mp3/EWP_XC649905_clipped.mp3")
+ewp_amps = seewave::spec(ewpmp3) %>%   # get a plot of amplitude (dB) vs frequency for the recording
+  data.frame()
+head(ewp_amps)                    # this just creates a matrix of the x and y values of that plot
+
+max_amplitude_ewp = max(ewp_amps[,2])
+
+freq_at_max_amp_ewp <- ewp_amps$x[ewp_amps$y == max_amplitude_ewp]
+
+# BG
+
+bgmp3 <- readMP3("../../OneDriveUNC/AudioMoths/ForestAcoustics/PricipalRecordings/mp3/BG_XC726192_clipped.mp3")
+bg_amps = seewave::spec(bgmp3) %>%   # get a plot of amplitude (dB) vs frequency for the recording
+  data.frame()
+head(bg_amps)                    # this just creates a matrix of the x and y values of that plot
+
+max_amplitude_bg = max(bg_amps[,2])
+
+freq_at_max_amp_bg <- bg_amps$x[bg_amps$y == max_amplitude_bg]
+
+###### Make df with all frequencies at max amplitude, the range will be + or - 0.05 kHz
+
+# Note: all frequencies are in kHz
+
+freqs <- c(freq_at_max_amp_af, freq_at_max_amp_cw5, freq_at_max_amp_cw5, freq_at_max_amp_cw5, freq_at_max_amp_ewp, freq_at_max_amp_ybc, freq_at_max_amp_bg)
+
+species_freqs = data.frame(species = c("AF", "CW5", "CW3", "CW1", "EWP", "YBC", "BG"), bottom.freq = (freqs - 0.05), top.freq = (freqs + 0.05))
+
+# Make selection_table will all file names, and join with species_freqs
+
+selection_table <- data.frame(sound.files = file_names, selec = (1:length(file_names)), start = 0, end = 20)
+selection_table$species <- word(selection_table$sound.files, sep="_", 3)
+
+selection_table_full <- left_join(selection_table, species_freqs, by = "species") 
+
+##### For loop to acquire amplitude mean in the frequency range for each species
+
+file_names <- file_names 
+output_amps <- list()
+
+for (i in (1:length(file_names))){
+  # Read in mp3 file
+  tmpwav <- readMP3(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/", file_names[i], sep=""))
+  # Amp over Freq. data frame
+  tmp_amps = seewave::spec(tmpwav) %>%
+    data.frame()
+  # Filter only frequencies of bird call
+  amp_range <- tmp_amps %>%
+    filter(x >= selection_table_full$bottom.freq[selection_table_full$sound.files == file_names[i]],
+           x <= selection_table_full$top.freq[selection_table_full$sound.files == file_names[i]])
+  mean_amp <- mean(amp_range$y)
+  output_amps[i] <- mean_amp
+}
+
+# Add output amplitudes and filtering out CW3 and CW5 as they are redundant in this analysis
+# Add distance & vol columns & remove columns unnecessary for analysis
+
+selection_table_full$relative.amp <- output_amps
+
+analysis_table <- selection_table_full %>%
+  filter(species != "CW3", species != "CW1")
+
+analysis_table$dist <- word(analysis_table$sound.files, sep="_", 2)
+analysis_table$vol <- word(analysis_table$sound.files, sep="_", 4)
+analysis_table$vol <- substr(analysis_table$vol, 1, nchar(analysis_table$vol) - 4)
+
+analysis_table <- analysis_table[,c(2,5,9,10,6,7,8)]
+
+
+
+
+
+
 
 #################################################
 
-# Frequency at max amplitude
-# This doesn't work :-)
 
-library(dplyr)
 
-onemp3 <- readMP3("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/13_25E_AF_100.mp3")
-one_amps = seewave::spec(onemp3)  # get a plot of amplitude (dB) vs frequency for the recording
-head(one_amps)                    # this just creates a matrix of the x and y values of that plot
-
-max_amplitude = max(one_amps[,2])    
+spectro(tmpwav)
+abline(h = freq_at_max_amp, col = "orange")
 
 # the maximum value of the second column, which is                                                                              # the highest point on the graph
 freq_at_max_amplitude = one_amps[one_amps[,2] == max_amplitude, 1]    # this returns the x value(column 1, which is   frequency) at which the y value (column 2) is equal to the maximum value in column 2 (i.e. the highest amplitude)
@@ -49,4 +157,30 @@ freq_at_max_amplitude = one_amps[one_amps[,2] == max_amplitude, 1]    # this ret
 # We can check that this is doing what we think. First plot the spectrogram:
 seewave::spectro(onemp3)
 abline(h = freq_at_max_amplitude, col = "orange")       # draw a horizontal line at the frequency of max amplitude, and see that it goes right through the red portion
+
+
+spectro_analysis(data[1,], path='../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/')
+
+
+#### Probably not what we'll use
+
+## Sound Pressure Level (dB)
+
+onemp3 <- readMP3("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/13_25E_AF_100.mp3")  ## assuming file is in your working directory!
+
+writeWave(onemp3,"onetmp.wav",extensible=FALSE)
+
+selec_table = data.frame(sound.files = 'onetmp.wav', selec = 1, start = 0, end = 100, bottom.freq = 2, top.freq = 8)
+
+output = sound_pressure_level(selec_table, path='temp')
+
+output
+
+
+data = data.frame(sound.files = file_names, selec = (1:length(file_names)), start = 0, end = 20, bottom.freq = 2, top.freq = 8)
+
+output = sound_pressure_level(data[1,], path='../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/')
+
+# Now w our files...
+
 
