@@ -11,7 +11,7 @@ library(dplyr)
 
 ##### Problems to fix:
 # - trim .mp3 off of all of the mp3 names bc its very confusing to have .mp3.wav
-# - in analysis, there should be a way to simply change a variable name and analyze a different date - rn it hardcoded 
+# - in analysis, there should be a way to simply change a variable name and analyze a different date - rn it hard coded 
 
 ######
 
@@ -107,8 +107,7 @@ selection_table_full <- left_join(selection_table, species_freqs, by = "species"
 
 ##### For loop to acquire amplitude mean in the frequency range for each species
 
-file_names <- file_names 
-output_amps <- list()
+output_amps <- c()
 
 for (i in (1:length(file_names))){
   # Read in mp3 file
@@ -132,12 +131,36 @@ selection_table_full$relative.amp <- output_amps
 analysis_table <- selection_table_full %>%
   filter(species != "CW3", species != "CW1")
 
+colors_dir = c("blue", "red", "green", "orange")
+colors_spec = c()
+
 analysis_table$dist <- word(analysis_table$sound.files, sep="_", 2)
+analysis_table$distance_m <- as.numeric(substr(analysis_table$dist, 1, nchar(analysis_table$dist) - 1))
+analysis_table$relative_dir <- substr(analysis_table$dist, nchar(analysis_table$dist), nchar(analysis_table$dist))
 analysis_table$vol <- word(analysis_table$sound.files, sep="_", 4)
 analysis_table$vol <- substr(analysis_table$vol, 1, nchar(analysis_table$vol) - 4)
+analysis_table$col_dir <- case_when(analysis_table$relative_dir == "N" ~ colors[1],
+                                analysis_table$relative_dir == "S" ~ colors[2],
+                                analysis_table$relative_dir == "E" ~ colors[3],
+                                analysis_table$relative_dir == "W" ~ colors[4])
+analysis_table
 
-analysis_table <- analysis_table[,c(2,5,9,10,6,7,8)]
 
+
+### End script, create new scripts for AM and MA analysis
+
+# AF analysis
+
+AF <- analysis_table %>%
+  filter(species == "AF", vol == "100")
+
+plot(AF$distance_m, log(AF$relative.amp), col=AF$col, pch = 16, cex = 2, 
+     ylab = "log Relative amplitude", xlab = "Distance (m)")
+legend("topright", legend = c("N", "S", "E", "W"), pch = 16, cex = 2, col = colors[1:4])
+
+AFdistMod = lm(log(relative.amp) ~ distance_m, data = AF)
+
+# Also do CW analysis
 
 
 
