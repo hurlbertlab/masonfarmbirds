@@ -132,7 +132,7 @@ analysis_table <- selection_table_full %>%
   filter(species != "CW3", species != "CW1")
 
 colors_dir = c("blue", "red", "green", "orange")
-colors_spec = c("#9FD573","#79A356", "#4C6F2F", "#2B4416", "#0B2308")
+colors_spec = c("#BC4749","#79A356", "#FFB703", "#2A9D8F", "#283618")
 
 analysis_table$dist <- word(analysis_table$sound.files, sep="_", 2)
 analysis_table$distance_m <- as.numeric(substr(analysis_table$dist, 1, nchar(analysis_table$dist) - 1))

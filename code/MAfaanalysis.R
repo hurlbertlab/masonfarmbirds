@@ -17,7 +17,7 @@ analysis_table <- analysis_table %>%
 analysis <- analysis_table %>%
   filter(relative_dir == "N", vol == "100")
 
-colors_spec = c("#9FD573","#79A356", "#4C6F2F", "#2B4416", "#0B2308")
+colors_spec = c("#BC4749","#79A356", "#FFB703", "#2A9D8F", "#283618")
 
 # Create DFs for each species
 
@@ -43,12 +43,12 @@ YBCdistMod = lm(log(relative.amp) ~ distance_m, data = YBC_analysis)
 
 
 
-plot(analysis$distance_m, log(analysis$relative.amp), col=analysis_table$col_spec, pch = 16, cex = 2,
-     ylab = "log Relative amplitude", xlab = "Distance (m)")
-abline(BGdistMod, lwd = 5, col = analysis_table$col_spec[1])
-abline(AFdistMod, lwd = 5, col = analysis_table$col_spec[2])
-abline(EWPdistMod, lwd = 5, col = analysis_table$col_spec[3])
-abline(CWdistMod, lwd = 5, col = analysis_table$col_spec[4])
-abline(YBCdistMod, lwd = 5, col = analysis_table$col_spec[5])
-legend("topright", legend = c("BG", "AF", "EWP", "CW", "YBC"), pch = 16, cex = 2, col = colors_spec[1:5])
+plot(analysis$distance_m, log(analysis$relative.amp), col="white",lty="dotted", pch = 16, cex = 1.7,
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4) )
+abline(BGdistMod, lwd = 4, col = colors_spec[1])
+abline(AFdistMod, lwd = 4, col = colors_spec[2])
+abline(EWPdistMod, lwd = 4, col = colors_spec[3])
+abline(CWdistMod, lwd = 4, col = colors_spec[4])
+abline(YBCdistMod, lwd = 4, col = colors_spec[5])
+legend("topright", legend = c("BG: 6.88 kHz", "AF: 5.27 kHz", "EWP: 4.21 kHz", "CW: 3.00 kHz", "YBC: 1.70 kHz"), pch = 16, cex = 2, col = colors_spec[1:5])
 
