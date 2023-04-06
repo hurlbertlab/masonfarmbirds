@@ -6,7 +6,7 @@ library(dplyr)
 
 #########################################
 ###### Forest Acoustics Analysis   ######
-###### Last update: 3/31/23        ######
+###### Last update: 4/6/2023       ######
 #########################################
 
 ##### Problems to fix:
@@ -132,7 +132,7 @@ analysis_table <- selection_table_full %>%
   filter(species != "CW3", species != "CW1")
 
 colors_dir = c("blue", "red", "green", "orange")
-colors_spec = c("red", "purple", "blue", "orange", "green")
+colors_spec = c("#9FD573","#79A356", "#4C6F2F", "#2B4416", "#0B2308")
 
 analysis_table$dist <- word(analysis_table$sound.files, sep="_", 2)
 analysis_table$distance_m <- as.numeric(substr(analysis_table$dist, 1, nchar(analysis_table$dist) - 1))
@@ -143,11 +143,11 @@ analysis_table$col_dir <- case_when(analysis_table$relative_dir == "N" ~ colors_
                                 analysis_table$relative_dir == "S" ~ colors_dir[2],
                                 analysis_table$relative_dir == "E" ~ colors_dir[3],
                                 analysis_table$relative_dir == "W" ~ colors_dir[4])
-analysis_table$col_spec <- case_when(analysis_table$species == "AF" ~ colors_spec[1],
-                                     analysis_table$species == "CW5" ~ colors_spec[2],
-                                     analysis_table$species == "YBC" ~ colors_spec[3],
-                                     analysis_table$species == "BG" ~ colors_spec[4],
-                                     analysis_table$species == "EWP" ~ colors_spec[5])
+analysis_table$col_spec <- case_when(analysis_table$species == "BG" ~ colors_spec[1],
+                                     analysis_table$species == "AF" ~ colors_spec[2],
+                                     analysis_table$species == "EWP" ~ colors_spec[3],
+                                     analysis_table$species == "CW5" ~ colors_spec[4],
+                                     analysis_table$species == "YBC" ~ colors_spec[5])
 analysis_table
 
 
