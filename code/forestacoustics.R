@@ -132,20 +132,28 @@ analysis_table <- selection_table_full %>%
   filter(species != "CW3", species != "CW1")
 
 colors_dir = c("blue", "red", "green", "orange")
-colors_spec = c()
+colors_spec = c("red", "purple", "blue", "orange", "green")
 
 analysis_table$dist <- word(analysis_table$sound.files, sep="_", 2)
 analysis_table$distance_m <- as.numeric(substr(analysis_table$dist, 1, nchar(analysis_table$dist) - 1))
 analysis_table$relative_dir <- substr(analysis_table$dist, nchar(analysis_table$dist), nchar(analysis_table$dist))
 analysis_table$vol <- word(analysis_table$sound.files, sep="_", 4)
 analysis_table$vol <- substr(analysis_table$vol, 1, nchar(analysis_table$vol) - 4)
-analysis_table$col_dir <- case_when(analysis_table$relative_dir == "N" ~ colors[1],
-                                analysis_table$relative_dir == "S" ~ colors[2],
-                                analysis_table$relative_dir == "E" ~ colors[3],
-                                analysis_table$relative_dir == "W" ~ colors[4])
+analysis_table$col_dir <- case_when(analysis_table$relative_dir == "N" ~ colors_dir[1],
+                                analysis_table$relative_dir == "S" ~ colors_dir[2],
+                                analysis_table$relative_dir == "E" ~ colors_dir[3],
+                                analysis_table$relative_dir == "W" ~ colors_dir[4])
+analysis_table$col_spec <- case_when(analysis_table$species == "AF" ~ colors_spec[1],
+                                     analysis_table$species == "CW5" ~ colors_spec[2],
+                                     analysis_table$species == "YBC" ~ colors_spec[3],
+                                     analysis_table$species == "BG" ~ colors_spec[4],
+                                     analysis_table$species == "EWP" ~ colors_spec[5])
 analysis_table
 
 
+# Write out CSV
+
+write.csv(analysis_table,"data/analysis_table.csv")
 
 ### End script, create new scripts for AM and MA analysis
 
