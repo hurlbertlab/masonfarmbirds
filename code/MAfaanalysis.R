@@ -52,3 +52,14 @@ abline(CWdistMod, lwd = 4, col = colors_spec[4])
 abline(YBCdistMod, lwd = 4, col = colors_spec[5])
 legend("topright", legend = c("BG: 6.88 kHz", "AF: 5.27 kHz", "EWP: 4.21 kHz", "CW: 3.00 kHz", "YBC: 1.70 kHz"), pch = 16, cex = 2, col = colors_spec[1:5])
 
+species <- c("BG", "AF", "EWP", "CW", "YBC")
+frequencies <- c(6.88, 5.27, 4.21, 3.00, 1.70)
+slope <- c(-0.035, -0.029, -0.028, -0.028, -0.023)
+
+freqvslope <- data.frame(species, frequencies, slope)
+
+freqvslopegraph = lm(slope ~ frequencies, data=freqvslope)
+plot(freqvslope$frequencies, freqvslope$slope, col=c("#BC4749", "#79A356", "#FFB703","#2A9D8F", "#283618"), lty="dotted", pch = 16, cex = 2.5,
+     ylab = "Slope of Line on log Relative Amp vs Dist Graph", xlab = "Frequency (kHz)" )
+abline(freqvslopegraph, lwd = 4, col = "black") 
+legend("topright", legend = c("BG", "AF", "EWP", "CW", "YBC"), pch = 16, cex = 2.5, col = colors_spec[1:5])
