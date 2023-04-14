@@ -137,8 +137,10 @@ colors_spec = c("#BC4749","#79A356", "#FFB703", "#2A9D8F", "#283618")
 analysis_table$dist <- word(analysis_table$sound.files, sep="_", 2)
 analysis_table$distance_m <- as.numeric(substr(analysis_table$dist, 1, nchar(analysis_table$dist) - 1))
 analysis_table$relative_dir <- substr(analysis_table$dist, nchar(analysis_table$dist), nchar(analysis_table$dist))
+analysis_table$TA <- word(analysis_table$sound.files, sep="_", 5)
 analysis_table$vol <- word(analysis_table$sound.files, sep="_", 4)
-analysis_table$vol <- substr(analysis_table$vol, 1, nchar(analysis_table$vol) - 4)
+analysis_table$vol <- gsub(".mp3", "", analysis_table$vol)
+
 analysis_table$col_dir <- case_when(analysis_table$relative_dir == "N" ~ colors_dir[1],
                                 analysis_table$relative_dir == "S" ~ colors_dir[2],
                                 analysis_table$relative_dir == "E" ~ colors_dir[3],
@@ -148,8 +150,29 @@ analysis_table$col_spec <- case_when(analysis_table$species == "BG" ~ colors_spe
                                      analysis_table$species == "EWP" ~ colors_spec[3],
                                      analysis_table$species == "CW5" ~ colors_spec[4],
                                      analysis_table$species == "YBC" ~ colors_spec[5])
-analysis_table
 
+# Toward and Away, this is dirty code that definitely needs to be fixed but for now it works 
+
+analysis_table <- analysis_table %>% mutate(TA = case_when(
+  TA == "A.mp3" ~ "A",
+  TA != "A.mp3" ~ "T",
+  (is.na(TA)) == TRUE ~ "T",
+))
+
+
+analysis_table <- analysis_table %>% mutate(vol = case_when(
+  vol == "A.mp3" ~ "A",
+  TA != "A.mp3" ~ "T",
+  (is.na(TA)) == TRUE ~ "T",
+))
+
+for(i in 1:nrow(analysis_table)) {
+  if analysis_table$TA[i] == "A" {
+    analysis_table$vol[i] == 100
+    }
+}
+
+analysis_table
 
 # Write out CSV
 
