@@ -17,12 +17,20 @@ analysis_table <- analysis_table %>%
 analysis <- analysis_table %>%
   filter(relative_dir == "N", vol == "100")
 
+<<<<<<< HEAD
 colors_spec = c("#BC4749","#79A356", "#FFB703", "#2A9D8F", "#283618")
+=======
+colors_spec = c("#9FD573","#79A356", "#4C6F2F", "#2B4416", "#0B2308")
+>>>>>>> 26dc5b9a1028023f0d8ae601bf6f60add408912c
 
 # Create DFs for each species
 
 CW_analysis <- analysis %>% 
   filter(species == "CW5")
+<<<<<<< HEAD
+=======
+
+>>>>>>> 26dc5b9a1028023f0d8ae601bf6f60add408912c
 CWdistMod = lm(log(relative.amp) ~ distance_m, data = CW_analysis)
 
 AF_analysis <- analysis %>% 
@@ -41,6 +49,7 @@ YBC_analysis <- analysis %>%
   filter(species == "YBC")
 YBCdistMod = lm(log(relative.amp) ~ distance_m, data = YBC_analysis)
 
+<<<<<<< HEAD
 
 
 plot(analysis$distance_m, log(analysis$relative.amp), col="white",lty="dotted", pch = 16, cex = 1.7,
@@ -63,3 +72,12 @@ plot(freqvslope$frequencies, freqvslope$slope, col=c("#BC4749", "#79A356", "#FFB
      ylab = "Slope of Line on log Relative Amp vs Dist Graph", xlab = "Frequency (kHz)" )
 abline(freqvslopegraph, lwd = 4, col = "black") 
 legend("topright", legend = c("BG", "AF", "EWP", "CW", "YBC"), pch = 16, cex = 2.5, col = colors_spec[1:5])
+=======
+plot(log(analysis$relative.amp) ~ analysis$distance_m, data = analysis)
+
+
+plot(analysis$distance_m, log(analysis$relative.amp), col=analysis_table$col_spec, pch = 16, cex = 2,
+     ylab = "log Relative amplitude", xlab = "Distance (m)")
+abline(CWdistMod, lwd = 5, col = analysis_table$col_spec[4])
+legend("topright", legend = c("BG", "AF", "EWP", "CW5", "YBC"), pch = 16, cex = 2, col = colors_spec[1:5])
+>>>>>>> 26dc5b9a1028023f0d8ae601bf6f60add408912c

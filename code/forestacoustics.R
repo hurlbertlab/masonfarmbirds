@@ -131,7 +131,7 @@ selection_table_full$relative.amp <- output_amps
 analysis_table <- selection_table_full %>%
   filter(species != "CW3", species != "CW1")
 
-colors_dir = c("blue", "red", "green", "orange")
+colors_dir = c("#BC4749", "#79A356", "#FFB703", "#2A9D8F")
 colors_spec = c("#BC4749","#79A356", "#FFB703", "#2A9D8F", "#283618")
 
 analysis_table$dist <- word(analysis_table$sound.files, sep="_", 2)
@@ -158,19 +158,6 @@ analysis_table <- analysis_table %>% mutate(TA = case_when(
   TA != "A.mp3" ~ "T",
   (is.na(TA)) == TRUE ~ "T",
 ))
-
-
-analysis_table <- analysis_table %>% mutate(vol = case_when(
-  vol == "A.mp3" ~ "A",
-  TA != "A.mp3" ~ "T",
-  (is.na(TA)) == TRUE ~ "T",
-))
-
-for(i in 1:nrow(analysis_table)) {
-  if analysis_table$TA[i] == "A" {
-    analysis_table$vol[i] == 100
-    }
-}
 
 analysis_table
 
