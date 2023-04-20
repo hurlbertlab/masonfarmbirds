@@ -1,7 +1,7 @@
 #########################################
 ###### Forest Acoustics Analysis   ######
 ###### Amelia Milano               ######
-###### Last update: 4/13/2023      ######
+###### Last update: 4/20/2023      ######
 #########################################
 
 library(dplyr)
@@ -17,11 +17,6 @@ AF <- analysis_table %>%
 # set relative amp as numeric
 AF$relative.amp <- as.numeric(AF$relative.amp)
 AF$distance_m <- as.numeric(AF$distance_m)
-
-# plot
-plot(AF$distance_m, log(AF$relative.amp), col=AF$col_dir, pch = 16, cex = 2, 
-     ylab = "log Relative amplitude", xlab = "Distance (m)")
-legend("topright", legend = c("N", "S", "E", "W"), pch = 16, cex = 2, col = colors[1:4])
 
 # Directions (0 degrees, 90 degrees, 180 degrees, )
 
@@ -40,24 +35,46 @@ AF_90W <- AF %>%
 AF_90E <- AF %>%
   filter(relative_dir == "E", TA == "T")
 
-AF_180 <- AF %>%
-  filter(relative_dir == "S")
+AF_180T <- AF %>%
+  filter(relative_dir == "S", TA == "T")
+
+AF_180A <- AF %>%
+  filter(relative_dir == "S", TA == "A")
 
 # Directional & dist lm
 AFdistMod = lm(log(relative.amp) ~ distance_m, data = AF)
-AF0distMod = lm(log(relative.amp) ~ distance_m, data = AF_0)
-AF90WdistMod = lm(log(relative.amp) ~ distance_m, data = AF_90W)
+AF0distMod = lm(log(relative.amp) ~ distance_m, data = AF_0T)
+AF270distMod = lm(log(relative.amp) ~ distance_m, data = AF_90W)
 AF90EdistMod = lm(log(relative.amp) ~ distance_m, data = AF_90E)
-AF180distMod = lm(log(relative.amp) ~ distance_m, data = AF_180)
+AF180distMod = lm(log(relative.amp) ~ distance_m, data = AF_180T)
 
 # Plot
 
-colors_dir <- c("#EB5353", "#f9b624", "#36AE7C", "#187498")
+colors_dir <- c("#D81B60", "#1E88E5", "#FFC107", "#00C16C")
 
 plot(AF$distance_m, log(AF$relative.amp), col="white",lty="dotted", pch = 16, cex = 1.7,
      ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4))
 abline(AF0distMod, lwd = 3, col = colors_dir[1])
-abline(AF90WdistMod, lwd = 3, col = colors_dir[2])
-abline(AF90EdistMod, lwd = 3, col = colors_dir[3])
-abline(AF180distMod, lwd = 3, col = colors_dir[4])
-legend("topright", legend = c("0", "90W", "90E", "180"), pch = 16, cex = 2, col = colors_dir[1:4])
+abline(AF90EdistMod, lwd = 3, col = colors_dir[2])
+abline(AF180distMod, lwd = 3, col = colors_dir[3])
+abline(AF270distMod, lwd = 3, col = colors_dir[4])
+legend("topright", legend = c("0°", "90°", "180°", "270°"), pch = 16, cex = 2, col = colors_dir[1:4], title = "Bearing Relative to ARU")
+
+
+
+#### Toward and Away
+
+colorsTA = c("#DE67C2", "#984284", "#00C16C", "#006538")
+
+AF0AdistMod = lm(log(relative.amp) ~ distance_m, data = AF_0A)
+AF0TdistMod = lm(log(relative.amp) ~ distance_m, data = AF_0T)
+AF180AdistMod = lm(log(relative.amp) ~ distance_m, data = AF_180A)
+AF180TdistMod = lm(log(relative.amp) ~ distance_m, data = AF_180T)
+
+plot(AF$distance_m, log(AF$relative.amp), col="white",lty="dotted", pch = 16, cex = 1.7,
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4))
+abline(AF0AdistMod, lwd = 3, col = colorsTA[2])
+abline(AF0TdistMod, lwd = 3, col = colorsTA[1])
+abline(AF180AdistMod, lwd = 3, col = colorsTA[4])
+abline(AF180TdistMod, lwd = 3, col = colorsTA[3])
+legend("topright", legend = c("0° Toward", "0° Away", "180° Toward", "180° Away"), pch = 16, cex = 2, col = colorsTA[1:4], title = "Location & Orientation of Speaker")

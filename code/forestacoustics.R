@@ -187,10 +187,17 @@ AFdistMod = lm(log(relative.amp) ~ distance_m, data = AF)
 
 #################################################
 
+aftmp <- readMP3("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/20_50N_AF_100.mp3")
 
+tmp_amps = seewave::spec(afmp3) %>%
+  data.frame()
 
-spectro(tmpwav)
-abline(h = freq_at_max_amp, col = "orange")
+max_amplitude_af = max(af_amps[,2])
+
+freq_at_max_amp_af <- af_amps$x[af_amps$y == max_amplitude_af]
+
+spectro(aftmp, tlim = c(0.6,1.2), flim = c(1,10))
+abline(h = freq_at_max_amp_af, col = "red", lwd = 2)
 
 # the maximum value of the second column, which is                                                                              # the highest point on the graph
 freq_at_max_amplitude = one_amps[one_amps[,2] == max_amplitude, 1]    # this returns the x value(column 1, which is   frequency) at which the y value (column 2) is equal to the maximum value in column 2 (i.e. the highest amplitude)
