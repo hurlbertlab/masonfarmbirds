@@ -53,11 +53,11 @@ AF180distMod = lm(log(relative.amp) ~ distance_m, data = AF_180T)
 colors_dir <- c("#D81B60", "#1E88E5", "#FFC107", "#00C16C")
 
 plot(AF$distance_m, log(AF$relative.amp), col="white",lty="dotted", pch = 16, cex = 1.7,
-     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4))
-abline(AF0distMod, lwd = 3, col = colors_dir[1])
-abline(AF90EdistMod, lwd = 3, col = colors_dir[2])
-abline(AF180distMod, lwd = 3, col = colors_dir[3])
-abline(AF270distMod, lwd = 3, col = colors_dir[4])
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4), )
+abline(AF0distMod, lwd = 5, col = colors_dir[1])
+abline(AF90EdistMod, lwd = 5, col = colors_dir[2])
+abline(AF180distMod, lwd = 5, col = colors_dir[3])
+abline(AF270distMod, lwd = 5, col = colors_dir[4])
 legend("topright", legend = c("0°", "90°", "180°", "270°"), pch = 16, cex = 2, col = colors_dir[1:4], title = "Bearing Relative to ARU")
 
 
@@ -73,8 +73,8 @@ AF180TdistMod = lm(log(relative.amp) ~ distance_m, data = AF_180T)
 
 plot(AF$distance_m, log(AF$relative.amp), col="white",lty="dotted", pch = 16, cex = 1.7,
      ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4))
-abline(AF0AdistMod, lwd = 3, col = colorsTA[2])
-abline(AF0TdistMod, lwd = 3, col = colorsTA[1])
-abline(AF180AdistMod, lwd = 3, col = colorsTA[4])
-abline(AF180TdistMod, lwd = 3, col = colorsTA[3])
+abline(AF0AdistMod, lwd = 5, col = colorsTA[2])
+abline(AF0TdistMod, lwd = 5, col = colorsTA[1])
+abline(AF180AdistMod, lwd = 5, col = colorsTA[4])
+abline(AF180TdistMod, lwd = 5, col = colorsTA[3])
 legend("topright", legend = c("0° Toward", "0° Away", "180° Toward", "180° Away"), pch = 16, cex = 2, col = colorsTA[1:4], title = "Location & Orientation of Speaker")
