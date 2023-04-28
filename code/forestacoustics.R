@@ -196,7 +196,7 @@ max_amplitude_af = max(af_amps[,2])
 
 freq_at_max_amp_af <- af_amps$x[af_amps$y == max_amplitude_af]
 
-spectro(afmp3, tlim = c(0.2,0.7), flim = c(1,10))
+spectro(aftmp, tlim = c(0.6,1.1), flim = c(1,10))
 abline(h = freq_at_max_amp_af, col = "red", lwd = 2)
 
 # the maximum value of the second column, which is                                                                              # the highest point on the graph

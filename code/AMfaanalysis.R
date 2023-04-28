@@ -58,7 +58,7 @@ abline(AF0distMod, lwd = 5, col = colors_dir[1])
 abline(AF90EdistMod, lwd = 5, col = colors_dir[2])
 abline(AF180distMod, lwd = 5, col = colors_dir[3])
 abline(AF270distMod, lwd = 5, col = colors_dir[4])
-legend("topright", legend = c("0°", "90°", "180°", "270°"), pch = 16, cex = 2, col = colors_dir[1:4], title = "Bearing Relative to ARU")
+legend("topright", legend = c("0°, R2 = 0.7807, p = 0.0052**", "90°, R2 = 0.4741, p = 0.194", "180°, R2 = 0.9181, p = 0.0001***", "270°, R2 = 0.9741, p = 0.00868**"), pch = 16, cex = 1.7, col = colors_dir[1:4], title = "Bearing Relative to ARU")
 
 
 
@@ -77,4 +77,5 @@ abline(AF0AdistMod, lwd = 5, col = colorsTA[2])
 abline(AF0TdistMod, lwd = 5, col = colorsTA[1])
 abline(AF180AdistMod, lwd = 5, col = colorsTA[4])
 abline(AF180TdistMod, lwd = 5, col = colorsTA[3])
-legend("topright", legend = c("0° Toward", "0° Away", "180° Toward", "180° Away"), pch = 16, cex = 2, col = colorsTA[1:4], title = "Location & Orientation of Speaker")
+legend("topright", legend = c("0° Toward, R2 = 0.7807, p = 0.0052**", "0° Away, R2 = 0.5821, p = 0.123", "180° Toward, R2 = 0.9181, p = 0.0001***", "180° Away, R2 = 0.9349, p = 0.1155"), pch = 16, cex = 1.7, col = colorsTA[1:4], title = "Location & Orientation of Speaker")
+
