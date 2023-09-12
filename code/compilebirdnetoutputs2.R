@@ -6,7 +6,7 @@
 
 #read in bn output files
 
-bnoutput_files <- list.files("../BN_results_wren/")
+bnoutput_files <- list.files("data/BN_results_wren/")
 
 #create output data frame
 output <- data.frame()
@@ -14,7 +14,7 @@ output <- data.frame()
 #for loop to get relevent information from the birdnet output files\
 
 for(a in 1:length(bnoutput_files)){
-file = read_csv(paste("../BN_results_wren/", bnoutput_files[a], sep=""))
+file = read_csv(paste("data/BN_results_wren/", bnoutput_files[a], sep=""))
 #get distance and direction phrase from file name
 distdir <- word(bnoutput_files[a], sep="_", 2)
 #look at last character in disdir
@@ -45,9 +45,8 @@ data$phrases <- phrases
 data$filename <- filename
     #now add the data to out output dataset
     output <- rbind(output, data)
-  }
-  
 }
+  
 beep()
 
 #some analysis
@@ -66,6 +65,9 @@ cwdistMod = lm(Confidence ~ distance, data = cw_output)
 cw3distMod = lm(Confidence ~ distance, data = cw3_output)
 cw5distMod = lm(Confidence ~ distance, data = cw5_output)
 distMod = lm(Confidence ~ distance, data = output)
+
+#note, there are only 2 cw3 audios that were processed due to the legnth being
+#less than 3 seconds
 
 colors = c("#D81B60", "#1E88E5", "#FFC107", "#00C16C")
 plot(output$distance, output$Confidence, pch = 16, cex = 2, 
