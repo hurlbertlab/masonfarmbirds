@@ -4,6 +4,10 @@
 
 #######################################
 
+#load libraries
+library(dplyr)
+library(tidyverse)
+
 #read in bn output files
 
 bnoutput_files <- list.files("data/BN_results_wren/")
