@@ -6,6 +6,7 @@
 
 library(dplyr)
 library(tidyverse)
+library(ggplot2)
 
 analysis_table <- read.csv("data/analysis_table.csv")
 
@@ -17,20 +18,18 @@ analysis_table <- analysis_table %>%
 analysis <- analysis_table %>%
   filter(relative_dir == "N", vol == "100")
 
-<<<<<<< HEAD
+analysis$relative.amp <- as.numeric(analysis$relative.amp)
+analysis$distance_m <- as.numeric(analysis$distance_m)
+
 colors_spec = c("#BC4749","#79A356", "#FFB703", "#2A9D8F", "#283618")
-=======
+
 colors_spec = c("#9FD573","#79A356", "#4C6F2F", "#2B4416", "#0B2308")
->>>>>>> 26dc5b9a1028023f0d8ae601bf6f60add408912c
 
 # Create DFs for each species
 
 CW_analysis <- analysis %>% 
   filter(species == "CW5")
-<<<<<<< HEAD
-=======
 
->>>>>>> 26dc5b9a1028023f0d8ae601bf6f60add408912c
 CWdistMod = lm(log(relative.amp) ~ distance_m, data = CW_analysis)
 
 AF_analysis <- analysis %>% 
@@ -48,9 +47,6 @@ EWPdistMod = lm(log(relative.amp) ~ distance_m, data = EWP_analysis)
 YBC_analysis <- analysis %>% 
   filter(species == "YBC")
 YBCdistMod = lm(log(relative.amp) ~ distance_m, data = YBC_analysis)
-
-<<<<<<< HEAD
-
 
 plot(analysis$distance_m, log(analysis$relative.amp), col="white",lty="dotted", pch = 16, cex = 1.7,
      ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4) )
@@ -72,7 +68,7 @@ plot(freqvslope$frequencies, freqvslope$slope, col=c("#BC4749", "#79A356", "#FFB
      ylab = "Slope of Line on log Relative Amp vs Dist Graph", xlab = "Frequency (kHz)" )
 abline(freqvslopegraph, lwd = 4, col = "black") 
 legend("topright", legend = c("BG", "AF", "EWP", "CW", "YBC"), pch = 16, cex = 2.5, col = colors_spec[1:5])
-=======
+
 plot(log(analysis$relative.amp) ~ analysis$distance_m, data = analysis)
 
 
@@ -80,4 +76,43 @@ plot(analysis$distance_m, log(analysis$relative.amp), col=analysis_table$col_spe
      ylab = "log Relative amplitude", xlab = "Distance (m)")
 abline(CWdistMod, lwd = 5, col = analysis_table$col_spec[4])
 legend("topright", legend = c("BG", "AF", "EWP", "CW5", "YBC"), pch = 16, cex = 2, col = colors_spec[1:5])
->>>>>>> 26dc5b9a1028023f0d8ae601bf6f60add408912c
+
+#### Raw data points graphs
+par(mfrow=c(3,2))
+
+#BG
+plot(BG_analysis$distance_m, log(BG_analysis$relative.amp), col= colors_spec[1],lty="dotted", pch = 16, cex = 1.7,
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4) )
+abline(BGdistMod, lwd = 4, col = colors_spec[1])
+legend("topright", legend = c("BG: 6.88 kHz"), pch = 16, cex = 1, col = colors_spec[1])
+
+#AF
+
+plot(AF_analysis$distance_m, log(AF_analysis$relative.amp), col= colors_spec[2],lty="dotted", pch = 16, cex = 1.7,
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4) )
+abline(AFdistMod, lwd = 4, col = colors_spec[2])
+legend("topright", legend = c("AF: 5.27 kHz"), pch = 16, cex = 1, col = colors_spec[2])
+
+#EWP
+
+plot(EWP_analysis$distance_m, log(EWP_analysis$relative.amp), col= colors_spec[3],lty="dotted", pch = 16, cex = 1.7,
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4) )
+abline(EWPdistMod, lwd = 4, col = colors_spec[3])
+legend("topright", legend = c("EWP: 4.21 kHz"), pch = 16, cex = 1, col = colors_spec[3])
+
+
+#CW5
+
+plot(CW_analysis$distance_m, log(CW_analysis$relative.amp), col= colors_spec[4],lty="dotted", pch = 16, cex = 1.7,
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4) )
+abline(CWdistMod, lwd = 4, col = colors_spec[4])
+legend("topright", legend = c("CW: 3.00 kHz"), pch = 16, cex = 1, col = colors_spec[4])
+
+#YBC
+plot(YBC_analysis$distance_m, log(YBC_analysis$relative.amp), col= colors_spec[5],lty="dotted", pch = 16, cex = 1.7,
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4) )
+abline(YBCdistMod, lwd = 4, col = colors_spec[5])
+legend("topright", legend = c("YBC: 1.70 kHz"), pch = 16, cex = 1, col = colors_spec[5])
+
+
+
