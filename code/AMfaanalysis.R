@@ -1,7 +1,7 @@
 #########################################
 ###### Forest Acoustics Analysis   ######
 ###### Amelia Milano               ######
-###### Last update: 4/20/2023      ######
+###### Last update: 9/19/2023      ######
 #########################################
 
 library(dplyr)
@@ -58,7 +58,10 @@ abline(AF0distMod, lwd = 5, col = colors_dir[1])
 abline(AF90EdistMod, lwd = 5, col = colors_dir[2])
 abline(AF180distMod, lwd = 5, col = colors_dir[3])
 abline(AF270distMod, lwd = 5, col = colors_dir[4])
-legend("topright", legend = c("0°, R2 = 0.7807, p = 0.0052**", "90°, R2 = 0.4741, p = 0.194", "180°, R2 = 0.9181, p = 0.0001***", "270°, R2 = 0.9741, p = 0.00868**"), pch = 16, cex = 1.7, col = colors_dir[1:4], title = "Bearing Relative to ARU")
+legend("topright", legend = c("0°, R2 = 0.7807, p = 0.0052**", 
+                              "90°, R2 = 0.4741, p = 0.194", 
+                              "180°, R2 = 0.9181, p = 0.0001***", 
+                              "270°, R2 = 0.9741, p = 0.00868**"), pch = 16, cex = 1.7, col = colors_dir[1:4], title = "Bearing Relative to ARU")
 
 
 
@@ -77,5 +80,69 @@ abline(AF0AdistMod, lwd = 5, col = colorsTA[2])
 abline(AF0TdistMod, lwd = 5, col = colorsTA[1])
 abline(AF180AdistMod, lwd = 5, col = colorsTA[4])
 abline(AF180TdistMod, lwd = 5, col = colorsTA[3])
-legend("topright", legend = c("0° Toward, R2 = 0.7807, p = 0.0052**", "0° Away, R2 = 0.5821, p = 0.123", "180° Toward, R2 = 0.9181, p = 0.0001***", "180° Away, R2 = 0.9349, p = 0.1155"), pch = 16, cex = 1.7, col = colorsTA[1:4], title = "Location & Orientation of Speaker")
+legend("topright", legend = c("0° Toward, R2 = 0.7807, p = 0.0052**", 
+                              "0° Away, R2 = 0.5821, p = 0.123", 
+                              "180° Toward, R2 = 0.9181, p = 0.0001***", 
+                              "180° Away, R2 = 0.9349, p = 0.1155"),pch = 16, cex = 1.7, col = colorsTA[1:4], title = "Location & Orientation of Speaker")
 
+
+##########################
+
+### Raw graphs 9/19/2023
+
+### Direction and Dist
+
+par(mfrow=c(2,2))
+
+# 0 Degree
+
+plot(AF_0T$distance_m, log(AF_0T$relative.amp), col= colors_dir[1] ,lty="dotted", pch = 16, cex = 1.7,
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4), main = "0°, R2 = 0.7807, p = 0.0052**")
+abline(AF0distMod, lwd = 5, col = colors_dir[1])
+
+# 90 Degree
+
+
+plot(AF_90E$distance_m, log(AF_90E$relative.amp), col= colors_dir[2] ,lty="dotted", pch = 16, cex = 1.7,
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4), main = "90°, R2 = 0.4741, p = 0.194")
+abline(AF90EdistMod, lwd = 5, col = colors_dir[2])
+
+# 180 Degree
+
+plot(AF_180T$distance_m, log(AF_180T$relative.amp), col= colors_dir[3] ,lty="dotted", pch = 16, cex = 1.7,
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4), main = "180°, R2 = 0.9181, p = 0.0001***")
+abline(AF180distMod, lwd = 5, col = colors_dir[3])
+
+# 270 Degree
+
+plot(AF_90W$distance_m, log(AF_90W$relative.amp), col= colors_dir[4] ,lty="dotted", pch = 16, cex = 1.7,
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4), main= "270° Bearing, R2 = 0.9741, p = 0.00868**")
+abline(AF270distMod, lwd = 5, col = colors_dir[4])
+
+### Toward and Away
+
+par(mfrow=c(2,2))
+
+# 0 Degree Toward
+
+plot(AF_0T$distance_m, log(AF_0T$relative.amp), col= colorsTA[1] ,lty="dotted", pch = 16, cex = 1.7,
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4), main = "0° Toward, R2 = 0.7807, p = 0.0052**")
+abline(AF0TdistMod, lwd = 5, col = colorsTA[1])
+
+# 0 Degree Away
+
+plot(AF_0A$distance_m, log(AF_0A$relative.amp), col= colorsTA[2] ,lty="dotted", pch = 16, cex = 1.7, ylim = c(-3.6, -1.9),
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4), main = "0° Away, R2 = 0.5821, p = 0.123")
+abline(AF0TdistMod, lwd = 5, col = colorsTA[2])
+
+# 180 Degree Toward
+
+plot(AF_180T$distance_m, log(AF_180T$relative.amp), col= colorsTA[3] ,lty="dotted", pch = 16, cex = 1.7,
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4), main = "180° Toward, R2 = 0.9181, p = 0.0001***")
+abline(AF180TdistMod, lwd = 5, col = colorsTA[3])
+
+# 180 Degree Away
+
+plot(AF_180A$distance_m, log(AF_180A$relative.amp), col= colorsTA[4] ,lty="dotted", pch = 16, cex = 1.7, ylim = c(-5.1, -3.5),
+     ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4), main= "180° Away, R2 = 0.9349, p = 0.1155")
+abline(AF180AdistMod, lwd = 5, col = colorsTA[4])
