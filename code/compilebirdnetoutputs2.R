@@ -12,7 +12,7 @@ library(tidyverse)
 
 bnoutput_files <- list.files("data/BN_results_wren/")
 
-#create output data frame
+#create output data frame, refresh every time
 output <- data.frame()
 
 #for loop to get relevent information from the birdnet output files\
@@ -33,12 +33,18 @@ else{
   distance <- as.numeric(substr(distdir, 1, nchar(distdir) - 1))
   direction <- substr(distdir, nchar(distdir), nchar(distdir))
 }
+#make sure carolina wren was detected - otherwise confidence = 0
+file$Confidence <- as.numeric(file$Confidence)
+if ('Carolina Wren' %in% file$`Common name` == FALSE){
+  file[nrow(file)+1,4] <- c("Carolina Wren")
+  file[nrow(file),5] <- c(0)
+}
+else{}
   #number of phrases played is indicated in the file name
 specphrases <- word(bnoutput_files[a], sep="_", 3)
 phrases <- substr(specphrases, 3, 3)
   #pull species detected and confidence from csvs
-data <- file %>%
-  select(4,5)
+data <- file[,4:5]
   #pull filename for data management purposes
 filename <- substr(bnoutput_files[a], 1, nchar(bnoutput_files[a])-24)
 filename
@@ -70,7 +76,7 @@ cw3distMod = lm(Confidence ~ distance, data = cw3_output)
 cw5distMod = lm(Confidence ~ distance, data = cw5_output)
 distMod = lm(Confidence ~ distance, data = output)
 
-#note, there are only 2 cw3 audios that were processed due to the legnth being
+#note, there are only 2 cw3 audios that were processed due to the length being
 #less than 3 seconds
 
 colors = c("#D81B60", "#1E88E5", "#FFC107", "#00C16C")
@@ -81,4 +87,24 @@ abline(cw5distMod, lwd = 4, col = colors[2])
 abline(cwdistMod, lwd = 4, col = colors[3])
 abline(distMod, lwd = 4, col = colors[4])
 legend(78.5,1, legend = c("CW 3", "CW 5", "All Carolina Wren", "All Species"), pch = 16, cex = 1.3, col = colors[1:4])
+
+## CW5 data points only 
+par(mfrow=c(2,1))
+hist(output$Confidence[output$"Common name" == "Carolina Wren"], main = paste("Histogram of CW Confidence"), xlab = "Confidence")
+plot(cw5_output$distance, cw5_output$Confidence, pch = 16, cex = 2, col = colors[2],
+     ylab = "confidence", xlab = "distance", xaxp = c(0, 100, 4))
+abline(cw5distMod, lwd = 4, col = colors[2])
+title(main = "CW5 Data Points")
+
+## Confidence histograms at different distance
+
+par(mfrow=c(2,2))
+
+hist(cw_output$Confidence[cw_output$distance == 25], main = paste("Histogram of CW Confidence 25m"), xlab = "Confidence", ylim = c(0,7), xlim = c(0,1))
+
+hist(cw_output$Confidence[cw_output$distance == 50], main = paste("Histogram of CW Confidence 50m"), xlab = "Confidence", ylim = c(0,7), xlim = c(0,1))
+
+hist(cw_output$Confidence[cw_output$distance == 75], main = paste("Histogram of CW Confidence 75m"), xlab = "Confidence", ylim = c(0,7), xlim = c(0,1))
+
+hist(cw_output$Confidence[cw_output$distance == 100], main = paste("Histogram of CW Confidence 100m"), xlab = "Confidence", ylim = c(0,7), xlim = c(0,1))
 
