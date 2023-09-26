@@ -133,7 +133,7 @@ abline(AF0TdistMod, lwd = 5, col = colorsTA[1])
 
 plot(AF_0A$distance_m, log(AF_0A$relative.amp), col= colorsTA[2] ,lty="dotted", pch = 16, cex = 1.7, ylim = c(-3.6, -1.9),
      ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4), main = "0° Away, R2 = 0.5821, p = 0.123")
-abline(AF0TdistMod, lwd = 5, col = colorsTA[2])
+abline(AF0AdistMod, lwd = 5, col = colorsTA[2])
 
 # 180 Degree Toward
 
