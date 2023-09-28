@@ -6,7 +6,7 @@ library(dplyr)
 
 #########################################
 ###### Forest Acoustics Analysis   ######
-###### Last update: 4/6/2023       ######
+###### Last update: 9/28/2023      ######
 #########################################
 
 ##### Problems to fix:
@@ -14,6 +14,8 @@ library(dplyr)
 # - in analysis, there should be a way to simply change a variable name and analyze a different date - rn it's hard coded 
 # - add n/a rows where nothing was detected
 # - rerun T/A analysis now that issue has been fixed w file names
+# - debug analysis table - make sure all of the values are what they need to be, make sure columbs
+#   are displaying the correct data
 
 ######
 
@@ -27,6 +29,12 @@ for (i in (1:length(file_names))){
   tmpmp3 <- readMP3(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/", file_names[i], sep=""))
   writeWave(tmpmp3, filename = paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Wav/", file_names[i], ".wav", sep = ""))
 }
+
+#for (i in (1:length(file_names))){
+#  tmpmp3 <- readMP3(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/", file_names[i], sep=""))
+#  writeWave(tmpmp3, filename = paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Wav/", substr(file_names[i], 1, nchar(file_names[i]) - 1), ".wav", sep = ""))
+#}
+
 
 ##### Visualizing all principal calls
 
