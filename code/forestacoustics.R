@@ -11,7 +11,9 @@ library(dplyr)
 
 ##### Problems to fix:
 # - trim .mp3 off of all of the mp3 names bc its very confusing to have .mp3.wav
-# - in analysis, there should be a way to simply change a variable name and analyze a different date - rn it hard coded 
+# - in analysis, there should be a way to simply change a variable name and analyze a different date - rn it's hard coded 
+# - add n/a rows where nothing was detected
+# - rerun T/A analysis now that issue has been fixed w file names
 
 ######
 
@@ -228,7 +230,4 @@ output
 data = data.frame(sound.files = file_names, selec = (1:length(file_names)), start = 0, end = 20, bottom.freq = 2, top.freq = 8)
 
 output = sound_pressure_level(data[1,], path='../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Clipped/')
-
-# Now w our files...
-
 
