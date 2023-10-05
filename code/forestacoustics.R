@@ -6,15 +6,11 @@ library(dplyr)
 
 #########################################
 ###### Forest Acoustics Analysis   ######
-###### Last update: 9/28/2023      ######
+###### Last update: 10/05/2023     ######
 #########################################
 
 ##### Problems to fix:
 # - in analysis, there should be a way to simply change a variable name and analyze a different date - rn it's hard coded 
-# - add n/a rows where nothing was detected
-# - rerun T/A analysis now that issue has been fixed w file names
-# - debug analysis table - make sure all of the values are what they need to be, make sure columbs
-#   are displaying the correct data
 
 ######
 
