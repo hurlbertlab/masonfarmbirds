@@ -1,6 +1,5 @@
 #############################################
-###### MA Forest Acoustics Analsysis   ######
-###### Distance & Frequency            ######
+###### Distance Frequency Analysis     ######
 ###### Last update: 4/6/2023           ######
 #############################################
 

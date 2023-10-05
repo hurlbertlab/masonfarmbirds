@@ -5,7 +5,7 @@ library(stringr)
 library(dplyr)
 
 #########################################
-###### Forest Acoustics Analysis   ######
+###### Extract Relative Amplitudes ######
 ###### Last update: 10/05/2023     ######
 #########################################
 
