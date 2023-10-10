@@ -13,7 +13,7 @@ library(tuneR)
 ############### Make analysis table
 
 # Pull all file names
-file_names <- list.files("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/3sec_wav/")
+file_names <- list.files("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/")
 
 # Pull in principle calls to get frequency at max amplitude
 
@@ -61,7 +61,7 @@ freq_at_max_amp_bg <- bg_amps$x[bg_amps$y == max_amplitude_bg]
 
 freqs <- c(freq_at_max_amp_ewp, freq_at_max_amp_ybc, freq_at_max_amp_bg)
 
-species_freqs = data.frame(species = c("AF", "CW5", "CW3", "CW1", "EWP", "YBC", "BG"), bottom.freq = (freqs - 0.05), top.freq = (freqs + 0.05))
+species_freqs = data.frame(species = c("EWP", "YBC", "BG"), bottom.freq = (freqs - 0.05), top.freq = (freqs + 0.05))
 
 # Make selection_table will all file names, and join with species_freqs
 
@@ -77,7 +77,7 @@ output_amps <- c()
 
 for (i in (1:length(file_names))){
   # Read in wav file
-  tmpwav <- readWave(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/Clipped/", file_names[i], sep=""))
+  tmpwav <- readWave(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/", file_names[i], sep=""))
   # Amp over Freq. data frame
   tmp_amps = seewave::spec(tmpwav) %>%
     data.frame()
@@ -101,7 +101,26 @@ selection_table_full$foliage_level <- word(selection_table_full$sound.files, sep
 
 
 
-foliage1 <- selection_table_full %>%
-  filter(species == "EWP")
-plot(foliage1$distance_m, foliage1$relative.amp, pch = 16, cex = 2, 
+foliage1_ewp <- selection_table_full %>%
+  filter(species == "EWP") %>%
+  filter(foliage_level == 0 | foliage_level == 1)
+plot(foliage1_ewp$distance_m, foliage1$relative.amp, pch = 16, cex = 2, 
+     ylab = "Relative amplitude", xlab = "Distance (m)")
+
+foliage1_bg <- selection_table_full %>%
+  filter(species == "BG") %>%
+  filter(foliage_level == 0 | foliage_level == 1)
+plot(foliage1_bg$distance_m, foliage1_bg$relative.amp, pch = 16, cex = 2, 
+     ylab = "Relative amplitude", xlab = "Distance (m)")
+
+foliage2_bg <- selection_table_full %>%
+  filter(species == "BG") %>%
+  filter(foliage_level == 0 | foliage_level == 2)
+plot(foliage2_bg$distance_m, foliage2_bg$relative.amp, pch = 16, cex = 2, 
+     ylab = "Relative amplitude", xlab = "Distance (m)")
+
+foliage3_bg <- selection_table_full %>%
+  filter(species == "BG") %>%
+  filter(foliage_level == 0 | foliage_level == 3)
+plot(foliage3_bg$distance_m, foliage3_bg$relative.amp, pch = 16, cex = 2, 
      ylab = "Relative amplitude", xlab = "Distance (m)")

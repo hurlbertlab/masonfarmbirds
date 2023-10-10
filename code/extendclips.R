@@ -8,7 +8,7 @@
 library(dplyr)
 library(tidyverse)
 library(tuneR)
-library(sound)
+library(beepr)
 
 ### for loop to grab every file, attach silence wav to extend, and save in new folder
 
@@ -18,25 +18,13 @@ silence <- readWave("../../OneDriveUNC/AudioMoths/ForestAcoustics/silence.wav")
 
 #begin loop
 
-for(a in 1:length(files)){}
+for(a in 1:length(files)){
 
-
-  file <- readWave(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Wav/", files[a], sep=""))
-  concatenated <- cbind(file, silence)
-  writeWave(concatendated, paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/ExtendedClips/" files[a], sep = ""))
+  audio <- readWave(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Wav/", files[a], sep=""))
+  concatenated <- bind(audio, silence)
+  writeWave(concatenated, paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/ExtendedClips/", files[a], sep = ""))
 
 }
 
 beep()
 
-
-
-
-
-file <- readWave("../Wrens/13_25E_CW3_75.mp3.wav")
-extended <- bind(file, silence)
-
-writeWave(extended, "../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/ExtendedClips/wren1.wav")
-           
-
-           
