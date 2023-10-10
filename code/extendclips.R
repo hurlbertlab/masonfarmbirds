@@ -14,7 +14,7 @@ library(sound)
 
 files <- list.files("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/Wav/")
 
-silence <- "../../OneDriveUNC/AudioMoths/ForestAcoustics/silence.wav"
+silence <- readWave("../../OneDriveUNC/AudioMoths/ForestAcoustics/silence.wav")
 
 #begin loop
 
@@ -33,13 +33,10 @@ beep()
 
 
 
-file <- "../Wrens/13_25E_CW3_75.mp3.wav"
-params <- fitSampleParameters(file, silence)
-fileparams <- params[1]
-silenceparams <- params[2]
-extended <- appendSample(fileparams, silenceparams)
+file <- readWave("../Wrens/13_25E_CW3_75.mp3.wav")
+extended <- bind(file, silence)
 
-saveSample(extended, "../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/ExtendedClips/wren1.wav", overwrite = FALSE)
+writeWave(extended, "../../OneDriveUNC/AudioMoths/ForestAcoustics/20230301/ExtendedClips/wren1.wav")
            
 
            
