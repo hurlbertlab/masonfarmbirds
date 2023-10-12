@@ -13,7 +13,7 @@ library(tuneR)
 ############### Make analysis table
 
 # Pull all file names
-file_names <- list.files("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/")
+file_names <- list.files("../../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/")
 
 # Pull in principle calls to get frequency at max amplitude
 
@@ -25,7 +25,7 @@ principal_calls <- list.files("../../OneDriveUNC/AudioMoths/ForestAcoustics/Pric
 
 # YBC
 
-ybcmp3 <- readMP3("../../OneDriveUNC/AudioMoths/ForestAcoustics/PricipalRecordings/mp3/YBC_XC20962.mp3")
+ybcmp3 <- readMP3("../../../OneDriveUNC/AudioMoths/ForestAcoustics/PricipalRecordings/mp3/YBC_XC20962.mp3")
 ybc_amps = seewave::spec(ybcmp3) %>%   # get a plot of amplitude (dB) vs frequency for the recording
   data.frame()
 head(ybc_amps)                    # this just creates a matrix of the x and y values of that plot
@@ -36,7 +36,7 @@ freq_at_max_amp_ybc <- ybc_amps$x[ybc_amps$y == max_amplitude_ybc]
 
 # EWP
 
-ewpmp3 <- readMP3("../../OneDriveUNC/AudioMoths/ForestAcoustics/PricipalRecordings/mp3/EWP_XC649905_clipped.mp3")
+ewpmp3 <- readMP3("../../../OneDriveUNC/AudioMoths/ForestAcoustics/PricipalRecordings/mp3/EWP_XC649905_clipped.mp3")
 ewp_amps = seewave::spec(ewpmp3) %>%   # get a plot of amplitude (dB) vs frequency for the recording
   data.frame()
 head(ewp_amps)                    # this just creates a matrix of the x and y values of that plot
@@ -47,7 +47,7 @@ freq_at_max_amp_ewp <- ewp_amps$x[ewp_amps$y == max_amplitude_ewp]
 
 # BG
 
-bgmp3 <- readMP3("../../OneDriveUNC/AudioMoths/ForestAcoustics/PricipalRecordings/mp3/BG_XC726192_clipped.mp3")
+bgmp3 <- readMP3("../../../OneDriveUNC/AudioMoths/ForestAcoustics/PricipalRecordings/mp3/BG_XC726192_clipped.mp3")
 bg_amps = seewave::spec(bgmp3) %>%   # get a plot of amplitude (dB) vs frequency for the recording
   data.frame()
 head(bg_amps)                    # this just creates a matrix of the x and y values of that plot
@@ -77,7 +77,7 @@ output_amps <- c()
 
 for (i in (1:length(file_names))){
   # Read in wav file
-  tmpwav <- readWave(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/", file_names[i], sep=""))
+  tmpwav <- readWave(paste("../../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/", file_names[i], sep=""))
   # Amp over Freq. data frame
   tmp_amps = seewave::spec(tmpwav) %>%
     data.frame()
@@ -96,8 +96,18 @@ selection_table_full$relative.amp <- output_amps
 
 selection_table_full$distance_m <- word(selection_table_full$sound.files, sep="_", 2)
 selection_table_full$foliage_level <- word(selection_table_full$sound.files, sep="_", 1)
+selection_table_full$categories <- paste(selection_table_full$species, selection_table_full$distance_m, "m", sep=" ")
 
-
+ggplot(selection_table_full, aes(x = foliage_level, y = relative.amp, fill = categories)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "Relative Amp by Foliage Level",
+    x = "Foliage Level",
+    y = "Relative Amp"
+  ) +
+  scale_fill_manual(values = c("#2085F9", "#61ABFF", "#B2D6FF", "#D00000", "#D04C4C", "#D79A9A", "#FEAD00", "#FCC953", "#FFE8B5")) +
+  theme_minimal() +
+  theme(legend.position = "top")
 
 
 
@@ -124,3 +134,5 @@ foliage3_bg <- selection_table_full %>%
   filter(foliage_level == 0 | foliage_level == 3)
 plot(foliage3_bg$distance_m, foliage3_bg$relative.amp, pch = 16, cex = 2, 
      ylab = "Relative amplitude", xlab = "Distance (m)")
+
+

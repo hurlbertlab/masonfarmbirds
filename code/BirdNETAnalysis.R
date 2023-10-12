@@ -7,7 +7,7 @@
 #load libraries
 library(dplyr)
 library(tidyverse)
-
+library(beepr)
 
 ############################################################
 # WREN ANALYSIS
@@ -132,7 +132,7 @@ hist(cw_output$Confidence[cw_output$distance == 100], main = paste("Histogram of
 
 #read in bn output files
 
-bnoutput_files <- list.files("data/BN_results_foliage_raw/")
+bnoutput_files <- list.files("../data/BN_results_foliage_raw/")
 
 #create output data frame, refresh every time
 output <- data.frame()
@@ -140,7 +140,7 @@ output <- data.frame()
 #for loop to get relevant information from the birdnet output files
 
 for(a in 1:length(bnoutput_files)){
-  file = read_csv(paste("data/BN_results_foliage_raw/", bnoutput_files[a], sep=""))
+  file = read_csv(paste("../data/BN_results_foliage_raw/", bnoutput_files[a], sep=""))
   #extract information from file name
   distance <- as.numeric(word(bnoutput_files[a], sep="_", 2))
   foliagelevel <- word(bnoutput_files[a], sep="_", 1)
@@ -180,3 +180,70 @@ for(a in 1:length(bnoutput_files)){
 }
 
 beep()
+
+
+
+
+output_birds <- output %>%
+  filter(output$`Common name` == "Blue-gray Gnatcatcher"  | output$`Common name` == "Eastern Wood-Pewee" | output$`Common name` == "Yellow-billed Cuckoo")
+names(output_birds) = c("Species", "confidence", "distance", "foliagelevel", "filename")
+output_birds$categories <- paste(output_birds$Species, output_birds$distance, "m", sep=" ")
+
+all_plot <- ggplot(output_birds, aes(x = foliagelevel, y = confidence, fill = categories)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "Confidence by Foliage Level",
+    x = "Foliage Level",
+    y = "Confidence"
+  ) +
+  scale_fill_manual(values = c("#2085F9", "#61ABFF", "#B2D6FF", "#D00000", "#D04C4C", "#D79A9A", "#FEAD00", "#FCC953", "#FFE8B5")) +
+  theme_minimal() +
+  theme(legend.position = "top")
+
+output_peewees <- output_birds %>%
+  filter(Species == "Eastern Wood-Pewee")
+
+ewp_plot <- ggplot(output_peewees, aes(x = foliagelevel, y = confidence, fill = categories)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "EWP Confidence by Foliage Level",
+    x = "Foliage Level",
+    y = "Confidence"
+  ) +
+  scale_fill_manual(values = c("#D00000", "#D04C4C", "#D79A9A")) +
+  theme_minimal() +
+  theme(legend.position = "top")
+
+output_bg <- output_birds %>%
+  filter(Species == "Blue-gray Gnatcatcher")
+
+bg_plot <- ggplot(output_bg, aes(x = foliagelevel, y = confidence, fill = categories)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "BG Confidence by Foliage Level",
+    x = "Foliage Level",
+    y = "Confidence"
+  ) +
+  scale_fill_manual(values = c("#2085F9", "#61ABFF", "#B2D6FF")) +
+  theme_minimal() +
+  theme(legend.position = "top")
+
+output_ybc <- output_birds %>%
+  filter(Species == "Yellow-billed Cuckoo")
+
+ybc_plot <- ggplot(output_ybc, aes(x = foliagelevel, y = confidence, fill = categories)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "YBC Confidence by Foliage Level",
+    x = "Foliage Level",
+    y = "Confidence"
+  ) +
+  scale_fill_manual(values = c("#FEAD00", "#FCC953", "#FFE8B5")) +
+  theme_minimal() +
+  theme(legend.position = "top")
+
+all_plot
+ewp_plot
+bg_plot
+ybc_plot
+grid.arrange(all_plot, ewp_plot, bg_plot, ybc_plot, ncol = 2)
