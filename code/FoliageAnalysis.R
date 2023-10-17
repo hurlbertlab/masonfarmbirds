@@ -136,3 +136,61 @@ plot(foliage3_bg$distance_m, foliage3_bg$relative.amp, pch = 16, cex = 2,
      ylab = "Relative amplitude", xlab = "Distance (m)")
 
 
+
+
+
+#########################################################################
+
+
+
+wavfile <- "../../Desktop/pnt3BGs.wav"
+
+meanAmpOfCall = function(wavfile, threshold, cut_from, cut_to) {
+  
+  # read in file
+  tmpwav = readWave(wavfile)
+  
+  # create matrix of values
+  tmpspec = seewave::spectro(tmpwav)
+  
+  # find freq of max amplitude
+  locationOfMax = which(tmpspec$amp == max(tmpspec$amp), arr.ind = TRUE)
+  #Row (first) value is the frequency of maximum amplitude
+  
+  # take all amplitudes at frequency of max amplitude
+  ampsAtMaxFreq = tmpspec$amp[locationOfMax[1], tmpspec$time >= cut_from & tmpspec$time <= cut_to]
+    
+  # filter all amps to threshold
+  ampsOfCall = ampsAtMaxFreq[ampsAtMaxFreq >= threshold]
+    
+  # take mean of filtered amps
+  meanAmplitude = mean(ampsOfCall)
+  
+  
+  return(meanAmplitude)
+}
+
+bg225 <- readWave("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/2_25_BG.wav")
+bg250 <- readWave("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/2_50_BG.wav")
+bg125 <- readWave("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/1_25_BG.wav")
+bg150 <- readWave("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/1_50_BG.wav")
+bg325 <- readWave("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/3_25_BG.wav")
+bg350 <- readWave("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/3_50_BG.wav")
+
+meanAmpOfCall("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/1_25_BG.wav", -25, 0, 3)
+meanAmpOfCall("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/1_50_BG.wav", -25, 0, 3)
+meanAmpOfCall("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/2_25_BG.wav", -25, 0, 3)
+meanAmpOfCall("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/2_50_BG.wav", -25, 0, 3)
+meanAmpOfCall("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/3_25_BG.wav", -25, 0, 3)
+meanAmpOfCall("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/3_50_BG.wav", -25, 0, 3)
+
+pt3bgs <- readWave("../../Desktop/pnt3BGs.wav")
+pt3bgsspect <- seewave::spectro(pt3bgs)
+pt3bgsspect_25 <- pt3bgsspect %>%
+  filter(pt3bgsspect$time < 2.6)
+
+spectro(pt3bgs)
+bg125spectro <- seewave::spectro(bg350)
+spectro(bg325)
+bg125spectro
+par(new=TRUE); plot(bg125spectro$time, bg125spectro$amp[134,], type = 'l')
