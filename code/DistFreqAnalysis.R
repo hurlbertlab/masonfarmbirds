@@ -7,7 +7,7 @@ library(dplyr)
 library(tidyverse)
 library(ggplot2)
 
-analysis_table <- read.csv("data/analysis_table.csv")
+analysis_table <- read.csv("data/analysis_table_03012023.csv")
 
 analysis_table <- analysis_table %>%
   mutate(vol = case_when((species == "CW5" & vol == 75) ~ 100,
