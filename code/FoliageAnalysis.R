@@ -1,6 +1,6 @@
 ######################################
 #### Foliage Analysis             ####
-#### Last updated: 10/5/2023      ####
+#### Last updated: 10/24/2023      ####
 ######################################
 
 # Load libraries
@@ -181,7 +181,7 @@ Slope_foliage1 <- c(-0.08531, -0.07161, 0.04256)
 fol1 <- data.frame(species, freqs, Slope_foliage1)
 fol1lm <- lm(Slope_foliage1 ~ freqs, data=fol1)
 
-plot(fol1$freqs, fol1$Slope_foliage1, col=c("#A6D1FF", "#FFBED9", "#FFDE84"),lty="dotted", pch = 16, cex = 2, ylab = "Relative Amplitude", xlab = "Freq", main="Foliage 1")
+plot(fol1$freqs, fol1$Slope_foliage1, col=c("#A6D1FF", "#FFBED9", "#FFDE84"),lty="dotted", pch = 16, cex = 2, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq", main="Foliage 1")
 abline(fol1lm, lwd = 4, col = "black")
 legend("topright", legend = c("BG", "EWP", "YBC"), pch = 16, cex = 1, col = c("#A6D1FF", "#FFBED9", "#FFDE84"))
 
@@ -192,7 +192,7 @@ Slope_foliage2 <- c(-0.0563, -0.09979, -0.1304)
 fol2 <- data.frame(species, freqs, Slope_foliage2)
 fol2lm <- lm(Slope_foliage2 ~ freqs, data=fol2)
 
-plot(fol2$freqs, fol2$Slope_foliage2, col=c("#4488D2", "#FD569C", "#F0B924"),lty="dotted", pch = 16, cex = 2, ylab = "Relative Amplitude", xlab = "Freq",  main="Foliage 2")
+plot(fol2$freqs, fol2$Slope_foliage2, col=c("#4488D2", "#FD569C", "#F0B924"),lty="dotted", pch = 16, cex = 2, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq",  main="Foliage 2")
 abline(fol2lm, lwd = 4, col = "black")
 legend("topleft", legend = c("BG", "EWP", "YBC"), pch = 16, cex = 1, col = c("#4488D2", "#FD569C", "#F0B924"))
 
@@ -203,7 +203,7 @@ Slope_foliage3 <- c(-0.1333, -0.03998, -0.05494 )
 fol3 <- data.frame(species, freqs, Slope_foliage3)
 fol3lm <- lm(Slope_foliage3 ~ freqs, data=fol3)
 
-plot(fol3$freqs, fol3$Slope_foliage3, col=c("#00438A", "#BF0251", "#D3A117"),lty="dotted", pch = 16, cex = 2,ylab = "Relative Amplitude", xlab = "Freq",  main="Foliage 3")
+plot(fol3$freqs, fol3$Slope_foliage3, col=c("#00438A", "#BF0251", "#D3A117"),lty="dotted", pch = 16, cex = 2,ylab = "Slope of Relative Amp vs Distance", xlab = "Freq",  main="Foliage 3")
 abline(fol3lm, lwd = 4, col = "black")
 legend("topright", legend = c("BG", "EWP", "YBC"), pch = 16, cex = 1, col = c("#00438A", "#BF0251", "#D3A117"))
 
