@@ -50,7 +50,8 @@ output <- data.frame(Point = NULL, Species = NULL, Distance = NULL, Amp = NULL)
 for (i in (1:length(file_names))){
   # Read in wav file
   tmpwav <- readWave(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""))
-  species = word(file_names[i], 1, sep="_")
+  species = word(file_names[i], 2, sep="_")
+  group = word(file_names[i], 1, sep="_")
   if(species == "BG"){
     mean_amp_1_25 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -12, 0, 5)
     mean_amp_1_50 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -12, 5, 10)
@@ -76,13 +77,31 @@ for (i in (1:length(file_names))){
     mean_amp_3_50 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -16, 25, 30)
   }
     
-  df <- data.frame(Species = species, Foliage = c(1, 1, 2, 2, 3, 3), Distance = c(25, 50, 25, 50, 25, 50), Amp = c(mean_amp_1_25, mean_amp_1_50, mean_amp_2_25, mean_amp_2_50, mean_amp_3_25, mean_amp_3_50))
+  df <- data.frame(Group = group, Species = species, Foliage = c(1, 1, 2, 2, 3, 3), Distance = c(25, 50, 25, 50, 25, 50), Amp = c(mean_amp_1_25, mean_amp_1_50, mean_amp_2_25, mean_amp_2_50, mean_amp_3_25, mean_amp_3_50))
   output <- rbind(output, df)
 }
 
-
-
 output$categories <- paste(output$Species, output$Foliage, output$Distance, sep="_")
+
+### Amp calculations
+
+output$Amp10s <- 10^(output$Amp)
+
+for (i in (1:nrow(output))){
+  if(output$Group[i] == "1"){
+    group1output <- output %>%
+      filter(Group == "1")
+    species_name = group1output$Species[i]
+    minrow = min(which(group1output$Species == species_name))
+    maxrow = max(which(group1output$Species == species_name))
+    spec_max_amp <- max(group1output$Amp10s[minrow:maxrow])
+    percent_atten <- (group1output$Amp10s[i] / spec_max_amp)
+    output$percentatten[i] <- percent_atten * 100
+    }
+  }
+
+
+###
 
 ggplot(output, aes(x = Foliage, y = Amp, fill = categories)) +
   geom_bar(stat = "identity", position = "dodge") +
@@ -106,9 +125,9 @@ bg2 <- bluegrays %>%
 bg3 <- bluegrays %>%
   filter(Foliage == 3)
 
-bg1lm <- lm(Amp ~ Distance, data = bg1)
-bg2lm <- lm(Amp ~ Distance, data = bg2)
-bg3lm <- lm(Amp ~ Distance, data = bg3)
+bg1lm <- lm(percentatten ~ Distance, data = bg1)
+bg2lm <- lm(percentatten ~ Distance, data = bg2)
+bg3lm <- lm(percentatten ~ Distance, data = bg3)
 
 # make YBC lms
 
@@ -122,9 +141,9 @@ ybc2 <- cuckoo %>%
 ybc3 <- cuckoo %>%
   filter(Foliage == 3)
 
-ybc1lm <- lm(Amp ~ Distance, data = ybc1)
-ybc2lm <- lm(Amp ~ Distance, data = ybc2)
-ybc3lm <- lm(Amp ~ Distance, data = ybc3)
+ybc1lm <- lm(percentatten ~ Distance, data = ybc1)
+ybc2lm <- lm(percentatten ~ Distance, data = ybc2)
+ybc3lm <- lm(percentatten ~ Distance, data = ybc3)
 
 # make ewp lms
 
@@ -138,33 +157,33 @@ ewp2 <- pewee %>%
 ewp3 <- pewee %>%
   filter(Foliage == 3)
 
-ewp1lm <- lm(Amp ~ Distance, data = ewp1)
-ewp2lm <- lm(Amp ~ Distance, data = ewp2)
-ewp3lm <- lm(Amp ~ Distance, data = ewp3)
+ewp1lm <- lm(percentatten ~ Distance, data = ewp1)
+ewp2lm <- lm(percentatten ~ Distance, data = ewp2)
+ewp3lm <- lm(percentatten ~ Distance, data = ewp3)
 
 par(mfrow=c(2,2))
 
 ## plots of different species
 
 # plot BG
-plot(bluegrays$Distance, bluegrays$Amp, col="black",lty="dotted", pch = 16, cex = 1.7,
-     ylab = "Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(-12,-7), main="BG Amp v Distance")
+plot(bluegrays$Distance, bluegrays$percentatten, col="black",lty="dotted", pch = 16, cex = 1.7,
+     ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), main="BG Amp v Distance")
 abline(bg1lm, lwd = 4, col = "#A6D1FF")
 abline(bg2lm, lwd = 4, col = "#4488D2")
 abline(bg3lm, lwd = 4, col = "#003975")
 legend("topright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = 16, cex = 1, col = c("#A6D1FF", "#4488D2", "#003975"))
 
 # plot ybc
-plot(cuckoo$Distance, cuckoo$Amp, col="black",lty="dotted", pch = 16, cex = 1.7,
-     ylab = "Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim =c(-15,-10), main="YBC Amp v Distance")
+plot(cuckoo$Distance, cuckoo$percentatten, col="black",lty="dotted", pch = 16, cex = 1.7,
+     ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), main="YBC Amp v Distance")
 abline(ybc1lm, lwd = 4, col = "#FFDE84")
 abline(ybc2lm, lwd = 4, col = "#F0B924")
 abline(ybc3lm, lwd = 4, col = "#9D7300")
 legend("topleft", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = 16, cex = 0.8, col = c("#FFDE84", "#F0B924", "#9D7300"))
 
 # plot ewp
-plot(pewee$Distance, pewee$Amp, col="black",lty="dotted", pch = 16, cex = 1.7,
-     ylab = "Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 50, 2), main="EWP Amp v Distance" )
+plot(pewee$Distance, pewee$percentatten, col="black",lty="dotted", pch = 16, cex = 1.7,
+     ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), main="EWP Amp v Distance" )
 abline(ewp1lm, lwd = 4, col = "#FFBED9")
 abline(ewp2lm, lwd = 4, col = "#FD569C")
 abline(ewp3lm, lwd = 4, col = "#870C3F")
