@@ -13,7 +13,7 @@ library(seewave)
 
 ############### Function to find mean amps
 
-meanAmpOfCall = function(wavfile, threshold, cut_from, cut_to) {
+meanAmpOfCall = function(wavfile, frequency, threshold, cut_from, cut_to) {
   
   # read in file
   tmpwav = readWave(wavfile)
@@ -22,7 +22,7 @@ meanAmpOfCall = function(wavfile, threshold, cut_from, cut_to) {
   tmpspec = seewave::spectro(tmpwav)
   
   # find freq of max amplitude
-  locationOfMax = which(tmpspec$amp == max(tmpspec$amp), arr.ind = TRUE)
+  locationOfMax = which(tmpspec$freq == frequency, arr.ind = TRUE)
   #Row (first) value is the frequency of maximum amplitude
   
   # take all amplitudes at frequency of max amplitude
@@ -38,52 +38,80 @@ meanAmpOfCall = function(wavfile, threshold, cut_from, cut_to) {
   return(meanAmplitude)
 }
 
-############### Make analysis table
+############### Find Relative Amp
+path <- "../../OneDriveUNC/AudioMoths/ForestAcoustics/20231105/Concatenated/BG_123.wav"
+frequency <- 6.8750
+threshold <- -25
 
-# Pull all file names
-file_names <- list.files("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/")
-
-##### For loop to acquire amplitude mean in the frequency range for each species
-
-output <- data.frame(Point = NULL, Species = NULL, Distance = NULL, Amp = NULL)
-
-for (i in (1:length(file_names))){
-  # Read in wav file
-  tmpwav <- readWave(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""))
-  species = word(file_names[i], 2, sep="_")
-  group = word(file_names[i], 1, sep="_")
-  if(species == "BG"){
-    mean_amp_1_25 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -12, 0, 5)
-    mean_amp_1_50 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -12, 5, 10)
-    mean_amp_2_25 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -12, 10, 15)
-    mean_amp_2_50 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -12, 15, 20)
-    mean_amp_3_25 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -12, 20, 25)
-    mean_amp_3_50 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -12, 25, 30)
-  }
-  if(species == "EWP"){
-    mean_amp_1_25 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -26, 0, 5)
-    mean_amp_1_50 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -26, 5, 10)
-    mean_amp_2_25 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -26, 10, 15)
-    mean_amp_2_50 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -26, 15, 20)
-    mean_amp_3_25 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -26, 20, 25)
-    mean_amp_3_50 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -26, 25, 30)
-  }
-  if(species == "YBC"){
-    mean_amp_1_25 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -16, 0, 5)
-    mean_amp_1_50 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -16, 5, 10)
-    mean_amp_2_25 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -16, 10, 15)
-    mean_amp_2_50 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -16, 15, 20)
-    mean_amp_3_25 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -16, 20, 25)
-    mean_amp_3_50 <- meanAmpOfCall(paste("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/concatenated/all_foliage/", file_names[i], sep=""), -16, 25, 30)
-  }
-    
-  df <- data.frame(Group = group, Species = species, Foliage = c(1, 1, 2, 2, 3, 3), Distance = c(25, 50, 25, 50, 25, 50), Amp = c(mean_amp_1_25, mean_amp_1_50, mean_amp_2_25, mean_amp_2_50, mean_amp_3_25, mean_amp_3_50))
-  output <- rbind(output, df)
+relativeAmp = function(path, frequency, threshold) {
+  # Pull all file names
+  # Create DF with all amp values
+  sp <- word(word(paste(path), 8, sep="/"), 1, sep = "_")
+  output <- data.frame(Point = NULL, Species = NULL, Distance = NULL, Amp = NULL)
+      mean_amp_1_1_25 <- meanAmpOfCall(paste(path), frequency, threshold, 0, 5)
+      mean_amp_1_2_25 <- meanAmpOfCall(paste(path), frequency, threshold, 5, 10)
+      mean_amp_1_3_25 <- meanAmpOfCall(paste(path), frequency, threshold, 10, 15)
+      mean_amp_1_1_50 <- meanAmpOfCall(paste(path), frequency, threshold, 15, 20)
+      mean_amp_1_2_50 <- meanAmpOfCall(paste(path), frequency, threshold, 20, 25)
+      mean_amp_1_3_50 <- meanAmpOfCall(paste(path), frequency, threshold, 25, 30)
+      
+      mean_amp_2_1_25 <- meanAmpOfCall(paste(path), frequency, threshold, 30, 35)
+      mean_amp_2_2_25 <- meanAmpOfCall(paste(path), frequency, threshold, 35, 40)
+      mean_amp_2_3_25 <- meanAmpOfCall(paste(path), frequency, threshold, 40, 45)
+      mean_amp_2_1_50 <- meanAmpOfCall(paste(path), frequency, threshold, 45, 50)
+      mean_amp_2_2_50 <- meanAmpOfCall(paste(path), frequency, threshold, 50, 55)
+      mean_amp_2_3_50 <- meanAmpOfCall(paste(path), frequency, threshold, 55, 60)
+      
+      mean_amp_3_1_25 <- meanAmpOfCall(paste(path), frequency, threshold, 60, 65)
+      mean_amp_3_2_25 <- meanAmpOfCall(paste(path), frequency, threshold, 65, 70)
+      mean_amp_3_3_25 <- meanAmpOfCall(paste(path), frequency, threshold, 70, 75)
+      mean_amp_3_1_50 <- meanAmpOfCall(paste(path), frequency, threshold, 75, 80)
+      mean_amp_3_2_50 <- meanAmpOfCall(paste(path), frequency, threshold, 80, 85)
+      mean_amp_3_3_50 <- meanAmpOfCall(paste(path), frequency, threshold, 85, 90)
+      
+      df <- data.frame(Species = sp, Foliage = c(1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3), Rep = c(1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3), Distance = c(25, 25, 25, 50, 50, 50, 25, 25, 25, 50, 50, 50, 25, 25, 25, 50, 50, 50), Amp = c(mean_amp_1_1_25, mean_amp_1_2_25, mean_amp_1_3_25, mean_amp_1_1_50, mean_amp_1_2_50, mean_amp_1_3_50,mean_amp_2_1_25, mean_amp_2_2_25, mean_amp_2_3_25,mean_amp_2_1_50, mean_amp_2_2_50, mean_amp_2_3_50,mean_amp_3_1_25, mean_amp_3_2_25, mean_amp_3_3_25,mean_amp_3_1_50, mean_amp_3_2_50, mean_amp_3_3_50))
+      output <- rbind(output, df)
+      output$categories <- paste(output$Species, output$Foliage, output$Rep, output$Distance, sep="_")
+  
+  return(output)
 }
 
-output$categories <- paste(output$Species, output$Foliage, output$Distance, sep="_")
+############### Start analysis
 
-### Amp calculations
+##### Find amps for each species
+
+BGfrequency <- 6.8750
+BGpath <- "../../OneDriveUNC/AudioMoths/ForestAcoustics/20231105/Concatenated/BG_123.wav"
+BG_output <- relativeAmp(BGpath, BGfrequency, -30)
+
+YBCfrequency <- 1.0625
+YBCpath <- "../../OneDriveUNC/AudioMoths/ForestAcoustics/20231105/Concatenated/YBC_123.wav"
+YBC_output <- relativeAmp(YBCpath, YBCfrequency, -28)
+
+### at 2/3/50 there is NaN, because they were completely inaudible
+MDfrequency <- 0.4375 
+MDpath <- "../../OneDriveUNC/AudioMoths/ForestAcoustics/20231105/Concatenated/MD_123.wav"
+MD_output <- relativeAmp(MDpath, MDfrequency, -30)
+
+### at 2/3/50 there is NaN, because they were completely inaudible
+AFfrequency <- 4.1875
+AFpath <- "../../OneDriveUNC/AudioMoths/ForestAcoustics/20231105/Concatenated/AF_123.wav"
+AF_output <- relativeAmp(AFpath, AFfrequency, -30)
+
+CWfrequency <- 3.8750
+CWpath <- "../../OneDriveUNC/AudioMoths/ForestAcoustics/20231105/Concatenated/CW_123.wav"
+CW_output <- relativeAmp(CWpath, CWfrequency, -24)
+
+EWPfrequency <- 4.1250
+EWPpath <- "../../OneDriveUNC/AudioMoths/ForestAcoustics/20231105/Concatenated/EWP_123.wav"
+EWP_output <- relativeAmp(EWPpath, EWPfrequency, -24)
+
+##### Amp calculations
+
+## need to do relative amplitude - but not to the 10, and when plotting, make the y
+## axis in magnitudes of 10, with 100% being 100%, and each tick down is a factor of 10
+## (10%, 1%, 0.1%, etc.)
+
 
 output$Amp10s <- 10^(output$Amp)
 
