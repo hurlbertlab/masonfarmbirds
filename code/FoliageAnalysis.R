@@ -97,30 +97,36 @@ meanAmp = function(output_df) {
 ##### Find amps for each species
 
 BGfrequency <- 6.8750
-BGpath <- "../../OneDriveUNC/AudioMoths/ForestAcoustics/20231105/Concatenated/BG_123.wav"
+BGpath <- "data/audiofiles/20231105_foliageanalysis/Concatenated/BG_123.wav"
 BG_output <- relativeAmp(BGpath, BGfrequency, -30)
+BG_output$relaamps <- (max(BG_output$Amp, na.rm = TRUE) / BG_output$Amp) * 100
 
 YBCfrequency <- 1.0625
-YBCpath <- "../../OneDriveUNC/AudioMoths/ForestAcoustics/20231105/Concatenated/YBC_123.wav"
+YBCpath <- "data/audiofiles/20231105_foliageanalysis/Concatenated/YBC_123.wav"
 YBC_output <- relativeAmp(YBCpath, YBCfrequency, -28)
+YBC_output$relaamps <- (max(YBC_output$Amp, na.rm = TRUE) / YBC_output$Amp) * 100
 
 ### at 2/3/50 there is NaN, because they were completely inaudible
 MDfrequency <- 0.4375 
-MDpath <- "../../OneDriveUNC/AudioMoths/ForestAcoustics/20231105/Concatenated/MD_123.wav"
+MDpath <- "data/audiofiles/20231105_foliageanalysis/Concatenated/MD_123.wav"
 MD_output <- relativeAmp(MDpath, MDfrequency, -30)
+MD_output$relaamps <- (max(MD_output$Amp, na.rm = TRUE) / MD_output$Amp) * 100
 
 ### at 2/3/50 there is NaN, because they were completely inaudible
 AFfrequency <- 4.1875
-AFpath <- "../../OneDriveUNC/AudioMoths/ForestAcoustics/20231105/Concatenated/AF_123.wav"
+AFpath <- "data/audiofiles/20231105_foliageanalysis/Concatenated/AF_123.wav"
 AF_output <- relativeAmp(AFpath, AFfrequency, -30)
+AF_output$relaamps <- (max(AF_output$Amp, na.rm = TRUE) / AF_output$Amp) * 100
 
 CWfrequency <- 3.8750
-CWpath <- "../../OneDriveUNC/AudioMoths/ForestAcoustics/20231105/Concatenated/CW_123.wav"
+CWpath <- "data/audiofiles/20231105_foliageanalysis/Concatenated/CW_123.wav"
 CW_output <- relativeAmp(CWpath, CWfrequency, -24)
+CW_output$relaamps <- (max(CW_output$Amp, na.rm = TRUE) / CW_output$Amp) * 100
 
 EWPfrequency <- 4.1250
-EWPpath <- "../../OneDriveUNC/AudioMoths/ForestAcoustics/20231105/Concatenated/EWP_123.wav"
+EWPpath <- "data/audiofiles/20231105_foliageanalysis/Concatenated/EWP_123.wav"
 EWP_output <- relativeAmp(EWPpath, EWPfrequency, -24)
+EWP_output$relaamps <- (max(EWP_output$Amp, na.rm = TRUE) / EWP_output$Amp) * 100
 
 ##### Amp calculations
 
@@ -217,53 +223,71 @@ par(mfrow=c(2,3))
 ## plots of different species
 
 # plot BG
-plot(meanAmpBG$Distance, meanAmpBG$MeanRelAmpPercent, col="black",lty="dotted", pch = 16, cex = 1.7,
+plot(BG_output$Distance, BG_output$relaamp, col="white",lty="dotted", pch = 16, cex = 1.7,
      ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), yaxt = "n", main="BG Amp v Distance")
 axis(c(100,10,1,0.1, 0.01), side = 2, at = c(100, 90, 80, 70, 60), las = 1)
+points(jitter(BG_output[BG_output$Foliage == 1,]$Distance, .1), BG_output[BG_output$Foliage == 1,]$relaamps, col = "#A6D1FF", pch = 17, cex = 2)
+points(jitter(BG_output[BG_output$Foliage == 2,]$Distance, .1), BG_output[BG_output$Foliage == 2,]$relaamps, col = "#4488D2", pch = 18, cex = 2)
+points(jitter(BG_output[BG_output$Foliage == 3,]$Distance, .1), BG_output[BG_output$Foliage == 3,]$relaamps, col = "#003975", pch = 19, cex = 2)
 abline(BG_lm1, lwd = 4, col = "#A6D1FF")
 abline(BG_lm2, lwd = 4, col = "#4488D2")
 abline(BG_lm3, lwd = 4, col = "#003975")
 legend("topright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = 16, cex = 1.5, col = c("#A6D1FF", "#4488D2", "#003975"))
 
 # plot ybc
-plot(meanAmpYBC$Distance, meanAmpYBC$MeanRelAmpPercent, col="black",lty="dotted", pch = 16, cex = 1.7,
+plot(YBC_output$Distance, YBC_output$relaamp, col="white",lty="dotted", pch = 16, cex = 1.7,
      ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), yaxt = "n", main="YBC Amp v Distance")
 axis(c(100,10,1,0.1, 0.01), side = 2, at = c(100, 90, 80, 70, 60), las = 1)
+points(jitter(YBC_output[YBC_output$Foliage == 1,]$Distance, .1), YBC_output[YBC_output$Foliage == 1,]$relaamps, col = "#FFDE84", pch = 17, cex = 2)
+points(jitter(YBC_output[YBC_output$Foliage == 2,]$Distance, .1), YBC_output[YBC_output$Foliage == 2,]$relaamps, col = "#F0B924", pch = 18, cex = 2)
+points(jitter(YBC_output[YBC_output$Foliage == 3,]$Distance, .1), YBC_output[YBC_output$Foliage == 3,]$relaamps, col = "#9D7300", pch = 19, cex = 2)
 abline(YBC_lm1, lwd = 4, col = "#FFDE84")
 abline(YBC_lm2, lwd = 4, col = "#F0B924")
 abline(YBC_lm3, lwd = 4, col = "#9D7300")
-legend("topright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = 16, cex = 1.5, col = c("#FFDE84", "#F0B924", "#9D7300"))
+legend("bottomright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = 16, cex = 1.5, col = c("#FFDE84", "#F0B924", "#9D7300"))
 
 # plot md
-plot(meanAmpMD$Distance, meanAmpMD$MeanRelAmpPercent, col="black",lty="dotted", pch = 16, cex = 1.7, yaxt = "n",
+plot(MD_output$Distance, MD_output$relaamp, col="white",lty="dotted", pch = 16, cex = 1.7, yaxt = "n",
      ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), main="MD Amp v Distance")
 axis(c(100,10,1,0.1, 0.01), side = 2, at = c(100, 90, 80, 70, 60), las = 1)
+points(jitter(MD_output[MD_output$Foliage == 1,]$Distance, .1), MD_output[MD_output$Foliage == 1,]$relaamps, col = "#D58DFF", pch = 17, cex = 2)
+points(jitter(MD_output[MD_output$Foliage == 2,]$Distance, .1), MD_output[MD_output$Foliage == 2,]$relaamps, col = "#9715E3", pch = 18, cex = 2)
+points(jitter(MD_output[MD_output$Foliage == 3,]$Distance, .1), MD_output[MD_output$Foliage == 3,]$relaamps, col = "#4C0078", pch = 19, cex = 2)
 abline(MD_lm1, lwd = 4, col = "#D58DFF")
 abline(MD_lm2, lwd = 4, col = "#9715E3")
 abline(MD_lm3, lwd = 4, col = "#4C0078")
 legend("topright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = 16, cex = 1.5, col = c("#D58DFF", "#9715E3", "#4C0078"))
 
 # plot af
-plot(meanAmpAF$Distance, meanAmpAF$MeanRelAmpPercent, col="black",lty="dotted", pch = 16, cex = 1.7, yaxt = "n",
+plot(AF_output$Distance, AF_output$relaamp, col="white",lty="dotted", pch = 16, cex = 1.7, yaxt = "n",
      ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), main="AF Amp v Distance")
 axis(c(100,10,1,0.1, 0.01), side = 2, at = c(100, 90, 80, 70, 60), las = 1)
+points(jitter(AF_output[AF_output$Foliage == 1,]$Distance, .1), AF_output[AF_output$Foliage == 1,]$relaamps, col = "#FFA555", pch = 17, cex = 2)
+points(jitter(AF_output[AF_output$Foliage == 2,]$Distance, .1), AF_output[AF_output$Foliage == 2,]$relaamps, col = "#FF7700", pch = 18, cex = 2)
+points(jitter(AF_output[AF_output$Foliage == 3,]$Distance, .1), AF_output[AF_output$Foliage == 3,]$relaamps, col = "#8F4300", pch = 19, cex = 2)
 abline(AF_lm1, lwd = 4, col = "#FFA555")
 abline(AF_lm2, lwd = 4, col = "#FF7700")
 abline(AF_lm3, lwd = 4, col = "#8F4300")
 legend("topright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = 16, cex = 1.5, col = c("#FFA555", "#FF7700", "#8F4300"))
 
 # plot cw
-plot(meanAmpCW$Distance, meanAmpCW$MeanRelAmpPercent, col="black",lty="dotted", pch = 16, cex = 1.7, yaxt = "n",
+plot(CW_output$Distance, CW_output$relaamp, col="white",lty="dotted", pch = 16, cex = 1.7, yaxt = "n",
      ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), main="CW Amp v Distance")
 axis(c(100,10,1,0.1, 0.01), side = 2, at = c(100, 90, 80, 70, 60), las = 1)
+points(jitter(CW_output[CW_output$Foliage == 1,]$Distance, .1), CW_output[CW_output$Foliage == 1,]$relaamps, col = "#7CFFC6", pch = 17, cex = 2)
+points(jitter(CW_output[CW_output$Foliage == 2,]$Distance, .1), CW_output[CW_output$Foliage == 2,]$relaamps, col = "#0ACE79", pch = 18, cex = 2)
+points(jitter(CW_output[CW_output$Foliage == 3,]$Distance, .1), CW_output[CW_output$Foliage == 3,]$relaamps, col = "#00693B", pch = 19, cex = 2)
 abline(CW_lm1, lwd = 4, col = "#7CFFC6")
 abline(CW_lm2, lwd = 4, col = "#0ACE79")
 abline(CW_lm3, lwd = 4, col = "#00693B")
-legend("topright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = 16, cex = 1.5, col = c("#7CFFC6", "#0ACE79", "#00693B"))
+legend("bottomleft", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = 16, cex = 1.5, col = c("#7CFFC6", "#0ACE79", "#00693B"))
 
 # plot ewp
-plot(meanAmpEWP$Distance, meanAmpEWP$MeanRelAmpPercent, col="black",lty="dotted", pch = 16, cex = 1.7, yaxt = "n", ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), main="EWP Amp v Distance" )
+plot(EWP_output$Distance, EWP_output$relaamp, col="white",lty="dotted", pch = 16, cex = 1.7, yaxt = "n", ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), main="EWP Amp v Distance" )
 axis(c(100,10,1,0.1, 0.01), side = 2, at = c(100, 90, 80, 70, 60), las = 1)
+points(jitter(EWP_output[EWP_output$Foliage == 1,]$Distance, .1), EWP_output[EWP_output$Foliage == 1,]$relaamps, col = "#FFBED9", pch = 17, cex = 2)
+points(jitter(EWP_output[EWP_output$Foliage == 2,]$Distance, .1), EWP_output[EWP_output$Foliage == 2,]$relaamps, col = "#FD569C", pch = 18, cex = 2)
+points(jitter(EWP_output[EWP_output$Foliage == 3,]$Distance, .1), EWP_output[EWP_output$Foliage == 3,]$relaamps, col = "#870C3F", pch = 19, cex = 2)
 abline(EWP_lm1, lwd = 4, col = "#FFBED9")
 abline(EWP_lm2, lwd = 4, col = "#FD569C")
 abline(EWP_lm3, lwd = 4, col = "#870C3F")
@@ -274,37 +298,37 @@ legend("topright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = 16, cex
 par(mfrow=c(3,1))
 
 # foliage level 1
-species <- c("BG", "YBC", "MD", "AF", "CW", "EWP")
-freqs <- c(6.88, 4.21, 1.70)
-Slope_foliage1 <- c(-0.08531, -0.07161, 0.04256)
+species <- c("BG", "AF", "EWP", "CW", "YBC", "MD")
+freqs <- c(6.88, 5.27, 4.21, 3.00, 1.7, 0.50)
+Slope_foliage1 <- c(-0.6236, -0.4299, -0.5401, -0.1381, -0.1757, -0.1749)
 fol1 <- data.frame(species, freqs, Slope_foliage1)
 fol1lm <- lm(Slope_foliage1 ~ freqs, data=fol1)
 
-plot(fol1$freqs, fol1$Slope_foliage1, col=c("#A6D1FF", "#FFBED9", "#FFDE84"),lty="dotted", pch = 16, cex = 2, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq", main="Foliage 1")
+plot(fol1$freqs, fol1$Slope_foliage1, col=c("#A6D1FF", "#FFA555", "#FFBED9", "#7CFFC6","#FFDE84", "#D58DFF" ),lty="dotted", pch = 16, cex = 3, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq (kHz)", main="Foliage 1")
 abline(fol1lm, lwd = 4, col = "black")
-legend("topright", legend = c("BG", "EWP", "YBC"), pch = 16, cex = 1, col = c("#A6D1FF", "#FFBED9", "#FFDE84"))
+legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ", "CW: 3.00 kHz", "YBC:1.70 kHz", "MD: 0.50 kHz"), pch = 16, cex = 1.25, col=c("#A6D1FF", "#FFA555", "#FFBED9", "#7CFFC6","#FFDE84", "#D58DFF"))
 
 # foliage level 2
-species <- c("BG", "EWP", "YBC")
-freqs <- c(6.88, 4.21, 1.70)
-Slope_foliage2 <- c(-0.0563, -0.09979, -0.1304)
+species <- c("BG", "AF", "EWP", "CW", "YBC", "MD")
+freqs <- c(6.88, 5.27, 4.21, 3.00, 1.7, 0.50)
+Slope_foliage2 <- c(-0.2826, -0.5636, -0.7861, -0.2312, -0.1812, -0.2703)
 fol2 <- data.frame(species, freqs, Slope_foliage2)
 fol2lm <- lm(Slope_foliage2 ~ freqs, data=fol2)
 
-plot(fol2$freqs, fol2$Slope_foliage2, col=c("#4488D2", "#FD569C", "#F0B924"),lty="dotted", pch = 16, cex = 2, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq",  main="Foliage 2")
+plot(fol2$freqs, fol2$Slope_foliage2, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3" ),lty="dotted", pch = 16, cex = 3, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq (kHz)",  main="Foliage 2")
 abline(fol2lm, lwd = 4, col = "black")
-legend("topleft", legend = c("BG", "EWP", "YBC"), pch = 16, cex = 1, col = c("#4488D2", "#FD569C", "#F0B924"))
+legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ", "CW: 3.00 kHz", "YBC:1.70 kHz", "MD: 0.50 kHz"), pch = 16, cex = 1.25, col = c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3" ))
 
 # foliage level 3
-species <- c("BG", "EWP", "YBC")
-freqs <- c(6.88, 4.21, 1.70)
-Slope_foliage3 <- c(-0.1333, -0.03998, -0.05494 )
+species <- c("BG", "AF", "EWP", "CW", "YBC", "MD")
+freqs <- c(6.88, 5.27, 4.21, 3.00, 1.7, 0.50)
+Slope_foliage3 <- c(-0.5708, -0.6096, -0.9931, -1.052, -0.2027, -0.4556)
 fol3 <- data.frame(species, freqs, Slope_foliage3)
 fol3lm <- lm(Slope_foliage3 ~ freqs, data=fol3)
 
-plot(fol3$freqs, fol3$Slope_foliage3, col=c("#00438A", "#BF0251", "#D3A117"),lty="dotted", pch = 16, cex = 2,ylab = "Slope of Relative Amp vs Distance", xlab = "Freq",  main="Foliage 3")
+plot(fol3$freqs, fol3$Slope_foliage3, col=c("#003975", "#8F4300", "#870C3F", "#00693B","#9D7300", "#4C0078" ),lty="dotted", pch = 16, cex = 3,ylab = "Slope of Relative Amp vs Distance", xlab = "Freq (kHz)",  main="Foliage 3")
 abline(fol3lm, lwd = 4, col = "black")
-legend("topright", legend = c("BG", "EWP", "YBC"), pch = 16, cex = 1, col = c("#00438A", "#BF0251", "#D3A117"))
+legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ", "CW: 3.00 kHz", "YBC:1.70 kHz", "MD: 0.50 kHz"), pch = 16, cex = 1.25, col = c("#003975", "#8F4300", "#870C3F", "#00693B","#9D7300", "#4C0078" ))
 
 #########################################################################
 
