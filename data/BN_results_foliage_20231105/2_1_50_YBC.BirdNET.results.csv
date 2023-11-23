@@ -1,0 +1,5 @@
+Start (s),End (s),Scientific name,Common name,Confidence
+0,3.0,Coccyzus americanus,Yellow-billed Cuckoo,0.7382
+0,3.0,Melospiza georgiana,Swamp Sparrow,0.6907
+3.0,6.0,Melospiza georgiana,Swamp Sparrow,0.2554
+3.0,6.0,Zonotrichia albicollis,White-throated Sparrow,0.1032

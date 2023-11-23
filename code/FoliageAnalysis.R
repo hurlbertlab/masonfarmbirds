@@ -38,12 +38,12 @@ meanAmpOfCall = function(wavfile, frequency, threshold, cut_from, cut_to) {
   return(meanAmplitude)
 }
 
-############### Find Relative Amp
+############### Find Mean Relative Amp
 
 relativeAmp = function(path, frequency, threshold) {
   # Pull all file names
   # Create DF with all amp values
-  sp <- word(word(paste(path), 8, sep="/"), 1, sep = "_")
+  sp <- word(word(paste(path), 5, sep="/"), 1, sep = "_")
   output <- data.frame(Point = NULL, Species = NULL, Distance = NULL, Amp = NULL)
       mean_amp_1_1_25 <- meanAmpOfCall(paste(path), frequency, threshold, 0, 5)
       mean_amp_1_2_25 <- meanAmpOfCall(paste(path), frequency, threshold, 5, 10)
@@ -91,6 +91,55 @@ meanAmp = function(output_df) {
   
   return(output)
 }
+
+############### Find confidence of BirdNET results for each species
+
+abrev <- c("BG", "YBC", "MD", "AF", "CW", "EWP")
+commonname <- c("Blue-gray Gnatcatcher", "Yellow-billed Cuckoo", "Mourning Dove", 
+                "Acadian Flycatcher", "Carolina Wren", "Eastern Wood-Pewee")
+species_list <- data.frame(abrev, commonname)
+
+bnConfidence = function(file_path, species) {
+  
+  # read in path
+  BNoutputfiles <- list.files(file_path)
+  
+  # For loop to gather information from BN output files
+  output <- data.frame(Foliage = NULL, Rep = NULL, Distance = NULL, Confidence = NULL)
+  
+  for(a in 1:length(BNoutputfiles)){
+    file = read_csv(paste(file_path, BNoutputfiles[a], sep=""))
+    #get foliage, rep, and distance from file name
+    foliage <- word(BNoutputfiles[a], sep="_", 1)
+    rep <- word(BNoutputfiles[a], sep="_", 2)
+    distance <- as.numeric(word(BNoutputfiles[a], sep="_", 3))
+    file_name <- BNoutputfiles[a]
+    file_spec <- substr(BNoutputfiles[a], 8, nchar(BNoutputfiles[a])-20)
+    
+    file$Confidence <- as.numeric(file$Confidence) 
+    if(species == file_spec){
+      common_name <- species_list$commonname[which(species == species_list$abrev)]
+      if (common_name %in% file$`Common name` == FALSE){
+        file[nrow(file)+1,4] <- c(common_name)
+        file[nrow(file),5] <- c(0)
+        
+      }
+      # trim file down to relevant data and add other relevant information
+      # compile all information into one dataframe 
+      data <- file[,4:5]
+      data$Foliage <- foliage
+      data$Rep <- rep
+      data$Distance <- distance
+      data$Filename <- file_name
+      
+      #now add the data to out output dataset
+      output <- rbind(output, data)
+    }
+    else{}
+}
+  return(output)
+}
+
 
 ############### Start analysis
 
@@ -332,33 +381,33 @@ legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ",
 
 #########################################################################
 
+##### BirdNET Analysis
+
+BNpath <- "data/BN_results_foliage_20231105/"
+
+BGconfidence <- bnConfidence(BNpath, "BG")
+AFconfidence <- bnConfidence(BNpath, "AF")
+EWPconfidence <- bnConfidence(BNpath, "EWP")
+CWconfidence <- bnConfidence(BNpath, "CW")
+YBCconfidence <- bnConfidence(BNpath, "YBC")
+MDconfidence <- bnConfidence(BNpath, "MD")
+
+# Join confidence with individual species outputs
+# Select for only the species we are looking for, disregard other species 
+# that BirdNET picked up for now
+
+BG_conf <- BGconfidence %>%
+  filter(BGconfidence$`Common name` == "Blue-gray Gnatcatcher")
+
+AF_conf <- AFconfidence %>%
+  filter(AFconfidence$`Common name` == "Acadian Flycatcher")
+
+BG_confamp <- merge(BG_output, BG_conf, by=c("Foliage","Rep", "Distance"))
+AF_confamp <- merge(AF_output, AF_conf, by=c("Foliage","Rep", "Distance"))
 
 
-wavfile <- "../../Desktop/pnt3BGs.wav"
-
-
-
-bg225 <- readWave("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/2_25_BG.wav")
-bg250 <- readWave("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/2_50_BG.wav")
-bg125 <- readWave("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/1_25_BG.wav")
-bg150 <- readWave("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/1_50_BG.wav")
-bg325 <- readWave("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/3_25_BG.wav")
-bg350 <- readWave("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/3_50_BG.wav")
-
-meanAmpOfCall("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/1_25_BG.wav", -25, 0, 3)
-meanAmpOfCall("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/1_50_BG.wav", -25, 0, 3)
-meanAmpOfCall("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/2_25_BG.wav", -25, 0, 3)
-meanAmpOfCall("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/2_50_BG.wav", -25, 0, 3)
-meanAmpOfCall("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/3_25_BG.wav", -25, 0, 3)
-meanAmpOfCall("../../OneDriveUNC/AudioMoths/ForestAcoustics/20230925/trimmed_wav/3_50_BG.wav", -25, 0, 3)
-
-pt3bgs <- readWave("../../Desktop/pnt3BGs.wav")
-pt3bgsspect <- seewave::spectro(pt3bgs)
-pt3bgsspect_25 <- pt3bgsspect %>%
-  filter(pt3bgsspect$time < 2.6)
-
-spectro(pt3bgs)
-bg125spectro <- seewave::spectro(bg350)
-spectro(bg325)
-bg125spectro
-par(new=TRUE); plot(bg125spectro$time, bg125spectro$amp[134,], type = 'l')
+# to be done 
+EWP_confamp <- merge(EWP_output, EWPconfidence, by=c("Foliage","Rep", "Distance"))
+CW_confamp <- merge(CW_output, CWconfidence, by=c("Foliage","Rep", "Distance"))
+YBC_confamp <- merge(YBC_output, YBCconfidence, by=c("Foliage","Rep", "Distance"))
+MD_confamp <- merge(MD_output, MDconfidence, by=c("Foliage","Rep", "Distance"))
