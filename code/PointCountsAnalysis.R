@@ -48,11 +48,6 @@ pointCountSummary = pointcounts %>%
   group_by(Species, Observer) %>%
   summarize(missByManual = sum(AudiomothDetected == 0))
 
-
-# Find species missed by observers
-# NOTE: Isn't the intention to count the number of point count periods in which the species was missed by counters?
-#       In which case, we need to put Period in n_distinct()
-#       Previously, it was counting the number of unique 9-minute point counts.
 manualSummary = missed %>%
   rename(Species = ManualSpeciesDetection) %>%
   group_by(Species, Observer) %>%
@@ -65,6 +60,37 @@ overallSummary = numPeriodsPerObserverSpecies %>%
 
 overallSummary$missByManual[is.na(overallSummary$missByManual)] = 0
 overallSummary$missByObserver[is.na(overallSummary$missByObserver)] = 0
+
+######Point Count vs Manual Analysis of Recordings Graph##############
+#get total number of detections (Point Count + Manual Analysis of Recording)
+# Add together Hurlbert and Wiley Observations
+PropDetected = overallSummary %>% group_by(Species) %>% mutate(totalNum = sum(totalNumPeriods), missManual = sum(missByManual), missObserver = sum(missByObserver))
+PropDetected = PropDetected[c(2, 6, 7, 8)]
+
+PropDetected$DetectedbyManual = (PropDetected$totalNum - PropDetected$missManual)
+PropDetected$DetectedbyObserver = (PropDetected$totalNum - PropDetected$missObserver)
+
+PropDetected = PropDetected %>% distinct(Species, totalNum, missManual, missObserver, DetectedbyManual, DetectedbyObserver)
+
+# Filter for only species that had over 4 detections
+PropDetected %>%
+  filter(PropDetected$totalNum > 4)
+
+
+
+
+
+ggplot(PropDetected, aes(x = DetectedbyManual, y = DetectedbyObserver, label = Species)) +
+  geom_point(size = 3) +
+  geom_abline(a=1, b=0) +
+  geom_label_repel(aes(label = Species),
+             box.padding   = 1, 
+             point.padding = 0.5,
+             segment.color = 'grey50',
+             label.size = 0.01,
+             max.overlaps = 100) 
+# y-axis is total detection (Point Count + Manual Analysis)
+# x-axis is number detected by method ()
 
 
 ################################
@@ -339,6 +365,9 @@ ggplot(AMBN_detection2, aes(x = reorder(Species, -ManualDetect), y = ManualDetec
   theme(text = element_text(size = 20)) +
   xlab("Species") +
   ylab("Count")
+
+
+# 
 
 
 
