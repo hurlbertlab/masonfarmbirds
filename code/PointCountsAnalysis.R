@@ -62,35 +62,6 @@ overallSummary$missByManual[is.na(overallSummary$missByManual)] = 0
 overallSummary$missByObserver[is.na(overallSummary$missByObserver)] = 0
 
 ######Point Count vs Manual Analysis of Recordings Graph##############
-#get total number of detections (Point Count + Manual Analysis of Recording)
-# Add together Hurlbert and Wiley Observations
-PropDetected = overallSummary %>% group_by(Species) %>% mutate(totalNum = sum(totalNumPeriods), missManual = sum(missByManual), missObserver = sum(missByObserver))
-PropDetected = PropDetected[c(2, 6, 7, 8)]
-
-PropDetected$DetectedbyManual = (PropDetected$totalNum - PropDetected$missManual)
-PropDetected$DetectedbyObserver = (PropDetected$totalNum - PropDetected$missObserver)
-
-PropDetected = PropDetected %>% distinct(Species, totalNum, missManual, missObserver, DetectedbyManual, DetectedbyObserver)
-
-# Filter for only species that had over 4 detections
-PropDetected %>%
-  filter(PropDetected$totalNum > 4)
-
-
-
-
-
-ggplot(PropDetected, aes(x = DetectedbyManual, y = DetectedbyObserver, label = Species)) +
-  geom_point(size = 3) +
-  geom_abline(a=1, b=0) +
-  geom_label_repel(aes(label = Species),
-             box.padding   = 1, 
-             point.padding = 0.5,
-             segment.color = 'grey50',
-             label.size = 0.01,
-             max.overlaps = 100) 
-# y-axis is total detection (Point Count + Manual Analysis)
-# x-axis is number detected by method ()
 
 
 ################################
@@ -160,6 +131,35 @@ shorthand$CommonName = c("Acadian Flycatcher",
                          "Unidentified Woodpecker",
                          "Yellow-billed Cuckoo",
                          "Yellow-throated Vireo")
+shorthand$four_letter = c("Acadian Flycatcher", 
+                          "American Crow", 
+                          "Blue-gray Gnatcatcher",
+                          "Brown-headed Cowbird", 
+                          "Blue Jay",
+                          "Carolina Chickadee",
+                          "Carolina Wren",
+                          "Downy Woodpecker",
+                          "Eastern Bluebird",
+                          "Eastern Wood-Pewee",
+                          "Fish Crow",
+                          "Great Crested Flycatcher",
+                          "Unidentified Hawk",
+                          "Hairy Woodpecker",
+                          "Mourning Dove",
+                          "Northern Cardinal",
+                          "Northern Parula",
+                          "Pileated Woodpecker",
+                          "Red-bellied Woodpecker",
+                          "Red-shouldered Hawk",
+                          "Red-eyed Vireo",
+                          "Scarlet Tanager",
+                          "Summer Tanager",
+                          "Tufted Titmouse",
+                          "White-breasted Nuthatch",
+                          "Worm-eating Warbler",
+                          "Unidentified Woodpecker",
+                          "Yellow-billed Cuckoo",
+                          "Yellow-throated Vireo")
 
 ### Working w Comparison
 
@@ -197,6 +197,7 @@ names(comparison2)[names(comparison2) == 'SpeciesName'] <- 'Species'
 # BirdNET Distinct
 birdnet_dist <- birdnet_output %>% 
   distinct(Date, Stake, Period, Species)
+
 
 # Number of birds detected with no min confidence
 num_dist_birds <- nrow(birdnet_dist)
@@ -366,8 +367,57 @@ ggplot(AMBN_detection2, aes(x = reorder(Species, -ManualDetect), y = ManualDetec
   xlab("Species") +
   ylab("Count")
 
+#################### 1/31/2024 analysis
 
-# 
+#get total number of detections (Point Count + Manual Analysis of Recording)
+# Add together Hurlbert and Wiley Observations
+PropDetected = overallSummary %>% group_by(Species) %>% mutate(totalNum = sum(totalNumPeriods), missManual = sum(missByManual), missObserver = sum(missByObserver))
+PropDetected = PropDetected[c(2, 6, 7, 8)]
+
+PropDetected$DetectedbyManual = (PropDetected$totalNum - PropDetected$missManual)
+PropDetected$DetectedbyObserver = (PropDetected$totalNum - PropDetected$missObserver)
+
+PropDetected = PropDetected %>% distinct(Species, totalNum, missManual, missObserver, DetectedbyManual, DetectedbyObserver)
+
+# Filter for only species that had over 4 detections
+PropDetected <- PropDetected %>%
+  filter(totalNum > 4)
+
+ggplot(PropDetected, aes(x = DetectedbyManual, y = DetectedbyObserver, label = Species)) +
+  geom_point(size = 3) +
+  geom_abline(a=1, b=0) +
+  geom_label_repel(aes(label = Species),
+                   box.padding   = 1, 
+                   point.padding = 0.5,
+                   segment.color = 'grey50',
+                   label.size = 0.01,
+                   max.overlaps = 100) 
+# y-axis is total detection (Point Count + Manual Analysis)
+# x-axis is number detected by method ()
 
 
+# Make Confirmed Detection vs BirdNET Detection no confidence threshold with 1:1 line graph
 
+#add abbreviated species names 
+
+BirdNETtotdetections = 
+  left_join(shorthand, birdnet_dist2, by = c("CommonName"= "Species"))
+            
+#Add BirdNET total detected to table
+
+PropDetectedTotal = 
+  left_join(BirdNETtotdetections, PropDetected, by = c("Abbrev" = "Species") )
+
+colnames(PropDetectedTotal)[3] <- "DetectedbyBirdNET"
+
+# all NAs must be zero, add axis titles, move addition of birdnet detections to before we filter for less than 4 because many NAs will be filtered out earlier, color  code above/below/on line
+
+ggplot(PropDetectedTotal, aes(x = DetectedbyBirdNET, y = totalNum)) +
+  geom_point(size = 3) +
+  geom_abline(a=1, b=0) +
+  geom_label_repel(aes(label = Abbrev),
+                   box.padding   = 1, 
+                   point.padding = 0.5,
+                   segment.color = 'grey50',
+                   label.size = 0.01,
+                   max.overlaps = 100) 
