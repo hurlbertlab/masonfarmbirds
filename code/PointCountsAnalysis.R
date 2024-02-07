@@ -413,6 +413,56 @@ colnames(PropDetectedTotal)[3] <- "DetectedbyBirdNET"
 
 # all NAs must be zero, add axis titles, move addition of birdnet detections to before we filter for less than 4 because many NAs will be filtered out earlier, color  code above/below/on line
 
+#add abbreviated species names 
+
+BirdNETtotdetections = 
+  left_join(shorthand, birdnet_dist2, by = c("CommonName"= "Species"))
+
+#Add BirdNET total detected to table
+
+PropDetectedTotal = 
+  left_join(BirdNETtotdetections, PropDetected, by = c("Abbrev" = "Species") )
+
+colnames(PropDetectedTotal)[4] <- "DetectedbyBirdNET"
+
+# add axis titles, move addition of birdnet detections to before we filter for less than 4 because many NAs will be filtered out earlier, color  code above/below/on line, make font sizes larger, make four-letter abrv. 
+
+#Create BirdNET data set for confidence intervals 0, 25, 50
+birdnetCounts = birdnet_output %>% group_by(Species, Period, Stake, Date) %>% summarize(maxConf = max(Confidence)) %>% group_by(Species) %>% summarize(n0 = n(), n25 = sum(maxConf >= 0.25), n50 = sum(maxConf >= 0.5))
+
+#Combine BirdNET data set with full data set
+
+FullDataSet =
+  left_join(birdnetCounts, PropDetectedTotal, by = c("Species" = "CommonName") )
+
+#filter out birdNET detections <4
+FullDataSet <- FullDataSet %>%
+  filter(DetectedbyBirdNET > 4)
+
+#Make NAs = 0
+FullDataSet[is.na(FullDataSet)] <- 0
+
+#Graph for BirdNET with no confidence interval
+
+ggplot(FullDataSet, aes(x = totalNum, y = DetectedbyBirdNET)) +
+  geom_point(size = 3) +
+  geom_abline(a=1, b=0) +
+  geom_label_repel(aes(label = Abbrev),
+                   box.padding   = 1, 
+                   point.padding = 0.5,
+                   segment.color = 'grey50',
+                   label.size = 0.01,
+                   max.overlaps = 100) 
+
+#Graph for BirdNET confidence interval 0, 25, 50 with arrows
+
+plot(FullDataSet$totalNum, FullDataSet$n0, pch = 16)
+text(FullDataSet$totalNum, FullDataSet$n0+2, FullDataSet$Abbrev, cex = 1)
+arrows(FullDataSet$totalNum, FullDataSet$n0, FullDataSet$totalNum, FullDataSet$n50, length = .1)
+points(FullDataSet$totalNum, FullDataSet$n25, pch = 18, col = 'red')
+abline(a=0, b = 1)
+
+
 ggplot(PropDetectedTotal, aes(x = DetectedbyBirdNET, y = totalNum)) +
   geom_point(size = 3) +
   geom_abline(a=1, b=0) +
