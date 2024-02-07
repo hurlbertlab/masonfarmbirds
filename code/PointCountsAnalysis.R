@@ -411,7 +411,7 @@ PropDetectedTotal =
 
 colnames(PropDetectedTotal)[3] <- "DetectedbyBirdNET"
 
-# all NAs must be zero, add axis titles, move addition of birdnet detections to before we filter for less than 4 because many NAs will be filtered out earlier, color  code above/below/on line
+
 
 #add abbreviated species names 
 
@@ -454,7 +454,7 @@ ggplot(FullDataSet, aes(x = totalNum, y = DetectedbyBirdNET)) +
                    label.size = 0.01,
                    max.overlaps = 100) 
 
-#Graph for BirdNET confidence interval 0, 25, 50 with arrows
+#Graph for BirdNET confidence interval 0, 25, 50 with arrows:
 
 plot(FullDataSet$totalNum, FullDataSet$n0, pch = 16)
 text(FullDataSet$totalNum, FullDataSet$n0+2, FullDataSet$Abbrev, cex = 1)
@@ -463,12 +463,3 @@ points(FullDataSet$totalNum, FullDataSet$n25, pch = 18, col = 'red')
 abline(a=0, b = 1)
 
 
-ggplot(PropDetectedTotal, aes(x = DetectedbyBirdNET, y = totalNum)) +
-  geom_point(size = 3) +
-  geom_abline(a=1, b=0) +
-  geom_label_repel(aes(label = Abbrev),
-                   box.padding   = 1, 
-                   point.padding = 0.5,
-                   segment.color = 'grey50',
-                   label.size = 0.01,
-                   max.overlaps = 100) 
