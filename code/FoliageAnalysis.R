@@ -358,9 +358,10 @@ Slope_foliage1 <- c(-0.6236, -0.4299, -0.5401, -0.1381, -0.1757, -0.1749)
 fol1 <- data.frame(species, freqs, Slope_foliage1)
 fol1lm <- lm(Slope_foliage1 ~ freqs, data=fol1)
 
-plot(fol1$freqs, fol1$Slope_foliage1, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"),lty="dotted", pch = 16, cex = 3, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq (kHz)", main="Foliage 1 (Low)",cex.axis = 1.25, cex.lab = 1.5, cex.main = 1.5, ylim = c(-1.2,0))
+plot(fol1$freqs, fol1$Slope_foliage1, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"),lty="dotted", pch = 16, cex = 3, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq (kHz)", main="Foliage 1 (Low)",cex.axis = 1.4, cex.lab = 1.7, cex.main = 1.8, ylim = c(-1.2,0))
 abline(fol1lm, lwd = 4, col = "black")
-legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ", "CW: 3.00 kHz", "YBC: 1.70 kHz", "MD: 0.50 kHz"), pch = 16, cex = 1.3, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"))
+legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ", "CW: 3.00 kHz", "YBC: 1.70 kHz", "MD: 0.50 kHz"), pch = 16, cex = 1.5, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"))
+legend("topright", legend = c("p-val: 0.02543, R2 = 0.7513"), cex = 1.5)
 
 # foliage level 2
 species <- c("BG", "AF", "EWP", "CW", "YBC", "MD")
@@ -369,9 +370,10 @@ Slope_foliage2 <- c(-0.2826, -0.5636, -0.7861, -0.2312, -0.1812, -0.2703)
 fol2 <- data.frame(species, freqs, Slope_foliage2)
 fol2lm <- lm(Slope_foliage2 ~ freqs, data=fol2)
 
-plot(fol2$freqs, fol2$Slope_foliage2, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3" ),lty="dotted", pch = 16, cex = 3, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq (kHz)",  main="Foliage 2 (Medium)", cex.axis = 1.25, cex.lab = 1.5, cex.main = 1.5, ylim = c(-1.2,0))
+plot(fol2$freqs, fol2$Slope_foliage2, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3" ),lty="dotted", pch = 16, cex = 3, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq (kHz)",  main="Foliage 2 (Medium)", cex.axis = 1.4, cex.lab = 1.7, cex.main = 1.8, ylim = c(-1.2,0))
 abline(fol2lm, lwd = 4, col = "black")
-legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ", "CW: 3.00 kHz", "YBC: 1.70 kHz", "MD: 0.50 kHz"), pch = 16, cex = 1.3, col = c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3" ))
+legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ", "CW: 3.00 kHz", "YBC: 1.70 kHz", "MD: 0.50 kHz"), pch = 16, cex = 1.5, col = c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3" ))
+legend("topright", legend = c("p-val: 0.4645, R2 = 0.1403"), cex = 1.5)
 
 # foliage level 3
 species <- c("BG", "AF", "EWP", "CW", "YBC", "MD")
@@ -380,9 +382,10 @@ Slope_foliage3 <- c(-0.5708, -0.6096, -0.9931, -1.052, -0.2027, -0.4556)
 fol3 <- data.frame(species, freqs, Slope_foliage3)
 fol3lm <- lm(Slope_foliage3 ~ freqs, data=fol3)
 
-plot(fol3$freqs, fol3$Slope_foliage3, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"),lty="dotted", pch = 16, cex = 3, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq (kHz)",  main="Foliage 3 (High)", cex.axis = 1.25, cex.lab = 1.5, cex.main = 1.5, ylim = c(-1.2,0))
+plot(fol3$freqs, fol3$Slope_foliage3, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"),lty="dotted", pch = 16, cex = 3, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq (kHz)",  main="Foliage 3 (High)", cex.axis = 1.4, cex.lab = 1.7, cex.main = 1.8, ylim = c(-1.2,0))
 abline(fol3lm, lwd = 4, col = "black")
-legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ", "CW: 3.00 kHz", "YBC: 1.70 kHz", "MD: 0.50 kHz"), pch = 16, cex = 1.3, col = c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"))
+legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ", "CW: 3.00 kHz", "YBC: 1.70 kHz", "MD: 0.50 kHz"), pch = 16, cex = 1.5, col = c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"))
+legend("topright", legend = c("p-val: 0.5803, R2 = 0.08278"), cex = 1.5)
 
 #########################################################################
 

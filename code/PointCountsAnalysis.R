@@ -436,14 +436,31 @@ birdnetCounts = birdnet_output %>% group_by(Species, Period, Stake, Date) %>% su
 FullDataSet =
   left_join(birdnetCounts, PropDetectedTotal, by = c("Species" = "CommonName") )
 
-#filter out birdNET detections <4
+#filter out detections <4
 FullDataSet <- FullDataSet %>%
   filter(DetectedbyBirdNET > 4)
+
 
 #Make NAs = 0
 FullDataSet[is.na(FullDataSet)] <- 0
 
 #Graph for BirdNET with no confidence interval
+
+plot(FullDataSet$totalNum, FullDataSet$n0, pch = 16)
+text(FullDataSet$totalNum, FullDataSet$n0+3, FullDataSet$four_letter, cex = 1)
+abline(a=0, b = 1)
+
+# Manual vs Point Count
+
+#filter out detections <4
+FullDataSet_pc_man <- FullDataSet %>%
+  filter(totalNum > 4)
+
+plot(FullDataSet_pc_man$DetectedbyManual, FullDataSet_pc_man$DetectedbyObserver, pch = 16)
+text(FullDataSet_pc_man$DetectedbyManual, FullDataSet_pc_man$DetectedbyObserver+3, FullDataSet_pc_man$four_letter, cex = 1)
+abline(a=0, b = 1)
+
+## GGplot version
 
 ggplot(FullDataSet, aes(x = totalNum, y = DetectedbyBirdNET)) +
   geom_point(size = 3) +
@@ -457,10 +474,19 @@ ggplot(FullDataSet, aes(x = totalNum, y = DetectedbyBirdNET)) +
 
 #Graph for BirdNET confidence interval 0, 25, 50 with arrows:
 
-plot(FullDataSet$totalNum, FullDataSet$n0, pch = 16)
+par(mfrow=c(1,1))
+
+# jitter 
+set.seed(0)
+jitteredx = jitter(FullDataSet$totalNum, )
+
+plot(jitteredx, FullDataSet$n0, pch = 16)
 text(FullDataSet$totalNum, FullDataSet$n0+3, FullDataSet$four_letter, cex = 1)
-arrows(FullDataSet$totalNum, FullDataSet$n0, FullDataSet$totalNum, FullDataSet$n50, length = .1)
-points(FullDataSet$totalNum, FullDataSet$n25, pch = 18, col = 'red')
+arrows(jitteredx, FullDataSet$n0, jitteredx, FullDataSet$n50, length = .1)
+points(jitteredx, FullDataSet$n25, pch = 18, col = 'red')
 abline(a=0, b = 1)
 
+# can add line that shows ~% missed/detected
+abline(a=0, b=.67, lty = 'dashed')
+# this shows 2/3
 
