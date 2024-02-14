@@ -439,11 +439,6 @@ par(mfrow=c(2,3))
 
 # plot BG all foliage
 
-##
-##
-## NEED TO FIX Y-AXIS
-##
-##
 
 plot(BG_confamp$relaamps, BG_confamp$Confidence, col="white",lty="dotted", pch = 16, cex = 1.7,
      ylab = "Confidence", xlab = "Relative Amplitude (%)", main="BG Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100)) 

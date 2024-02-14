@@ -131,35 +131,36 @@ shorthand$CommonName = c("Acadian Flycatcher",
                          "Unidentified Woodpecker",
                          "Yellow-billed Cuckoo",
                          "Yellow-throated Vireo")
-shorthand$four_letter = c("Acadian Flycatcher", 
-                          "American Crow", 
-                          "Blue-gray Gnatcatcher",
-                          "Brown-headed Cowbird", 
-                          "Blue Jay",
-                          "Carolina Chickadee",
-                          "Carolina Wren",
-                          "Downy Woodpecker",
-                          "Eastern Bluebird",
-                          "Eastern Wood-Pewee",
-                          "Fish Crow",
-                          "Great Crested Flycatcher",
-                          "Unidentified Hawk",
-                          "Hairy Woodpecker",
-                          "Mourning Dove",
-                          "Northern Cardinal",
-                          "Northern Parula",
-                          "Pileated Woodpecker",
-                          "Red-bellied Woodpecker",
-                          "Red-shouldered Hawk",
-                          "Red-eyed Vireo",
-                          "Scarlet Tanager",
-                          "Summer Tanager",
-                          "Tufted Titmouse",
-                          "White-breasted Nuthatch",
-                          "Worm-eating Warbler",
-                          "Unidentified Woodpecker",
-                          "Yellow-billed Cuckoo",
-                          "Yellow-throated Vireo")
+# 4 letter codes from institute for bird populations
+shorthand$four_letter = c("ACFL", 
+                          "AMCR", 
+                          "BGGN",
+                          "BHCO", 
+                          "BLJA",
+                          "CACH",
+                          "CARW",
+                          "DOWO",
+                          "EABL",
+                          "EAWP",
+                          "FICR",
+                          "GCFC",
+                          "n/a",
+                          "HAWO",
+                          "MODO",
+                          "NOCA",
+                          "NOPA",
+                          "PIWO",
+                          "RBWO",
+                          "RSHA",
+                          "REVI",
+                          "SCTA",
+                          "SUTA",
+                          "TUTI",
+                          "WBNU",
+                          "WEWA",
+                          "n/a",
+                          "YBCU",
+                          "YTVI")
 
 ### Working w Comparison
 
@@ -447,7 +448,7 @@ FullDataSet[is.na(FullDataSet)] <- 0
 ggplot(FullDataSet, aes(x = totalNum, y = DetectedbyBirdNET)) +
   geom_point(size = 3) +
   geom_abline(a=1, b=0) +
-  geom_label_repel(aes(label = Abbrev),
+  geom_label_repel(aes(label = four_letter),
                    box.padding   = 1, 
                    point.padding = 0.5,
                    segment.color = 'grey50',
@@ -457,7 +458,7 @@ ggplot(FullDataSet, aes(x = totalNum, y = DetectedbyBirdNET)) +
 #Graph for BirdNET confidence interval 0, 25, 50 with arrows:
 
 plot(FullDataSet$totalNum, FullDataSet$n0, pch = 16)
-text(FullDataSet$totalNum, FullDataSet$n0+2, FullDataSet$Abbrev, cex = 1)
+text(FullDataSet$totalNum, FullDataSet$n0+3, FullDataSet$four_letter, cex = 1)
 arrows(FullDataSet$totalNum, FullDataSet$n0, FullDataSet$totalNum, FullDataSet$n50, length = .1)
 points(FullDataSet$totalNum, FullDataSet$n25, pch = 18, col = 'red')
 abline(a=0, b = 1)

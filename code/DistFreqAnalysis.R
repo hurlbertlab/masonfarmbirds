@@ -1,7 +1,9 @@
 #############################################
 ###### Distance Frequency Analysis     ######
-###### Last update: 4/6/2023           ######
+###### Last update: 2/13/2024          ######
 #############################################
+
+## CURRENTLY BROKEN
 
 library(dplyr)
 library(tidyverse)
@@ -112,6 +114,3 @@ plot(YBC_analysis$distance_m, log(YBC_analysis$relative.amp), col= colors_spec[5
      ylab = "log Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4) )
 abline(YBCdistMod, lwd = 4, col = colors_spec[5])
 legend("topright", legend = c("YBC: 1.70 kHz"), pch = 16, cex = 1, col = colors_spec[5])
-
-
-
