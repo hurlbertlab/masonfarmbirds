@@ -501,3 +501,32 @@ points(jitter(MD_confamp[MD_confamp$Foliage == 3,]$relaamps, .1), MD_confamp[MD_
 abline(MD_confamplm, lwd = 4, col = "black")
 legend("bottomleft", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.2, col = c("#D58DFF", "#9715E3", "#4C0078"))
 
+##############
+## Linear models
+## amp ~ foliage + distance + foliage * distance
+## by species
+
+# BG
+
+BGAmpFolLinModel <- lm(Amp ~ Distance + Foliage + Distance*Foliage, data = BG_output)
+summary(BGAmpFolLinModel)
+
+# AF
+AFAmpFolLinModel <- lm(Amp ~ Distance + Foliage + Distance*Foliage, data = AF_output)
+summary(AFAmpFolLinModel)
+
+# EWP
+EWPAmpFolLinModel <- lm(Amp ~ Distance + Foliage + Distance*Foliage, data = EWP_output)
+summary(EWPAmpFolLinModel)
+
+# CW
+CWAmpFolLinModel <- lm(Amp ~ Distance + Foliage + Distance*Foliage, data = CW_output)
+summary(CWAmpFolLinModel)
+
+# YBC
+YBCAmpFolLinModel <- lm(Amp ~ Distance + Foliage + Distance*Foliage, data = YBC_output)
+summary(YBCAmpFolLinModel)
+
+# MD
+MDAmpFolLinModel <- lm(Amp ~ Distance + Foliage + Distance*Foliage, data = MD_output)
+summary(MDAmpFolLinModel)
