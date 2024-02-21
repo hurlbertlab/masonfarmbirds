@@ -108,7 +108,7 @@ bnConfidence = function(file_path, species) {
   output <- data.frame(Foliage = NULL, Rep = NULL, Distance = NULL, Confidence = NULL)
   
   for(a in 1:length(BNoutputfiles)){
-    file = read_csv(paste(file_path, BNoutputfiles[a], sep=""))
+    file = read_csv(paste(file_path, BNoutputfiles[a], sep=""), show_col_types = FALSE)
     # BirdNET trims calls into 3 second segments - to avoid very low confidence
     # that is associated with the end of a call, only take the first 3 seconds
     # for all calls except mourning dove, this is not an issue
@@ -278,74 +278,74 @@ par(mfrow=c(2,3), mar = c(5, 5, 3, 1))
 
 # plot BG
 plot(BG_output$Distance, BG_output$relaamp, col="white",lty="dotted", pch = 16, cex = 1.7,
-     ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), yaxt = "n", main="BG Amp v Distance", cex.axis = 1.25, cex.lab = 1.5, cex.main = 1.5)
+     ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), yaxt = "n", main="BG Amp v Distance", cex.axis = 1.5, cex.lab = 1.8, cex.main = 2)
 axis(c(100,10,1,0.1, 0.01), side = 2, at = c(100, 90, 80, 70, 60), las = 1, cex.axis = 1.25)
-points(jitter(BG_output[BG_output$Foliage == 1,]$Distance, .1), BG_output[BG_output$Foliage == 1,]$relaamps, col = "#A6D1FF", pch = 17, cex = 2)
-points(jitter(BG_output[BG_output$Foliage == 2,]$Distance, .1), BG_output[BG_output$Foliage == 2,]$relaamps, col = "#4488D2", pch = 18, cex = 2)
-points(jitter(BG_output[BG_output$Foliage == 3,]$Distance, .1), BG_output[BG_output$Foliage == 3,]$relaamps, col = "#003975", pch = 19, cex = 2)
+points(jitter(BG_output[BG_output$Foliage == 1,]$Distance, .1), BG_output[BG_output$Foliage == 1,]$relaamps, col = "#A6D1FF", pch = 17, cex = 2.3)
+points(jitter(BG_output[BG_output$Foliage == 2,]$Distance, .1), BG_output[BG_output$Foliage == 2,]$relaamps, col = "#4488D2", pch = 18, cex = 2.3)
+points(jitter(BG_output[BG_output$Foliage == 3,]$Distance, .1), BG_output[BG_output$Foliage == 3,]$relaamps, col = "#003975", pch = 19, cex = 2.3)
 abline(BG_lm1, lwd = 4, col = "#A6D1FF")
 abline(BG_lm2, lwd = 4, col = "#4488D2")
 abline(BG_lm3, lwd = 4, col = "#003975")
-legend("topright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.5, col = c("#A6D1FF", "#4488D2", "#003975"))
+legend("topright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.6, col = c("#A6D1FF", "#4488D2", "#003975"))
 
 # plot ewp
-plot(EWP_output$Distance, EWP_output$relaamp, col="white",lty="dotted", pch = 16, cex = 1.7, yaxt = "n", ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), main="EWP Amp v Distance", cex.axis = 1.25, cex.lab = 1.5, cex.main = 1.5)
+plot(EWP_output$Distance, EWP_output$relaamp, col="white",lty="dotted", pch = 16, cex = 1.7, yaxt = "n", ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), main="EWP Amp v Distance", cex.axis = 1.5, cex.lab = 1.8, cex.main = 2)
 axis(c(100,10,1,0.1, 0.01), side = 2, at = c(100, 90, 80, 70, 60), las = 1, cex.axis = 1.25)
-points(jitter(EWP_output[EWP_output$Foliage == 1,]$Distance, .1), EWP_output[EWP_output$Foliage == 1,]$relaamps, col = "#FFBED9", pch = 17, cex = 2)
-points(jitter(EWP_output[EWP_output$Foliage == 2,]$Distance, .1), EWP_output[EWP_output$Foliage == 2,]$relaamps, col = "#FD569C", pch = 18, cex = 2)
-points(jitter(EWP_output[EWP_output$Foliage == 3,]$Distance, .1), EWP_output[EWP_output$Foliage == 3,]$relaamps, col = "#870C3F", pch = 19, cex = 2)
+points(jitter(EWP_output[EWP_output$Foliage == 1,]$Distance, .1), EWP_output[EWP_output$Foliage == 1,]$relaamps, col = "#FFBED9", pch = 17, cex = 2.3)
+points(jitter(EWP_output[EWP_output$Foliage == 2,]$Distance, .1), EWP_output[EWP_output$Foliage == 2,]$relaamps, col = "#FD569C", pch = 18, cex = 2.3)
+points(jitter(EWP_output[EWP_output$Foliage == 3,]$Distance, .1), EWP_output[EWP_output$Foliage == 3,]$relaamps, col = "#870C3F", pch = 19, cex = 2.3)
 abline(EWP_lm1, lwd = 4, col = "#FFBED9")
 abline(EWP_lm2, lwd = 4, col = "#FD569C")
 abline(EWP_lm3, lwd = 4, col = "#870C3F")
-legend("topright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.5, col = c("#FFBED9", "#FD569C", "#870C3F"))
+legend("topright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex  = 1.6, col = c("#FFBED9", "#FD569C", "#870C3F"))
 
 # plot af
 plot(AF_output$Distance, AF_output$relaamp, col="white",lty="dotted", pch = 16, cex = 1.7, yaxt = "n",
-     ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), main="AF Amp v Distance", cex.axis = 1.25, cex.lab = 1.5, cex.main = 1.5)
+     ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), main="AF Amp v Distance", cex.axis = 1.5, cex.lab = 1.8, cex.main = 2)
 axis(c(100,10,1,0.1, 0.01), side = 2, at = c(100, 90, 80, 70, 60), las = 1, cex.axis = 1.25)
-points(jitter(AF_output[AF_output$Foliage == 1,]$Distance, .1), AF_output[AF_output$Foliage == 1,]$relaamps, col = "#FFA555", pch = 17, cex = 2)
-points(jitter(AF_output[AF_output$Foliage == 2,]$Distance, .1), AF_output[AF_output$Foliage == 2,]$relaamps, col = "#FF7700", pch = 18, cex = 2)
-points(jitter(AF_output[AF_output$Foliage == 3,]$Distance, .1), AF_output[AF_output$Foliage == 3,]$relaamps, col = "#8F4300", pch = 19, cex = 2)
+points(jitter(AF_output[AF_output$Foliage == 1,]$Distance, .1), AF_output[AF_output$Foliage == 1,]$relaamps, col = "#FFA555", pch = 17, cex = 2.3)
+points(jitter(AF_output[AF_output$Foliage == 2,]$Distance, .1), AF_output[AF_output$Foliage == 2,]$relaamps, col = "#FF7700", pch = 18, cex = 2.3)
+points(jitter(AF_output[AF_output$Foliage == 3,]$Distance, .1), AF_output[AF_output$Foliage == 3,]$relaamps, col = "#8F4300", pch = 19, cex = 2.3)
 abline(AF_lm1, lwd = 4, col = "#FFA555")
 abline(AF_lm2, lwd = 4, col = "#FF7700")
 abline(AF_lm3, lwd = 4, col = "#8F4300")
-legend("topright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.5, col = c("#FFA555", "#FF7700", "#8F4300"))
+legend("topright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex  = 1.6, col = c("#FFA555", "#FF7700", "#8F4300"))
 
 # plot cw
 plot(CW_output$Distance, CW_output$relaamp, col="white",lty="dotted", pch = 16, cex = 1.7, yaxt = "n",
-     ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), main="CW Amp v Distance", cex.axis = 1.25, cex.lab = 1.5, cex.main = 1.5)
+     ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), main="CW Amp v Distance", cex.axis = 1.5, cex.lab = 1.8, cex.main = 2)
 axis(c(100,10,1,0.1, 0.01), side = 2, at = c(100, 90, 80, 70, 60), las = 1, cex.axis = 1.25)
-points(jitter(CW_output[CW_output$Foliage == 1,]$Distance, .1), CW_output[CW_output$Foliage == 1,]$relaamps, col = "#7CFFC6", pch = 17, cex = 2)
-points(jitter(CW_output[CW_output$Foliage == 2,]$Distance, .1), CW_output[CW_output$Foliage == 2,]$relaamps, col = "#0ACE79", pch = 18, cex = 2)
-points(jitter(CW_output[CW_output$Foliage == 3,]$Distance, .1), CW_output[CW_output$Foliage == 3,]$relaamps, col = "#00693B", pch = 19, cex = 2)
+points(jitter(CW_output[CW_output$Foliage == 1,]$Distance, .1), CW_output[CW_output$Foliage == 1,]$relaamps, col = "#7CFFC6", pch = 17, cex = 2.3)
+points(jitter(CW_output[CW_output$Foliage == 2,]$Distance, .1), CW_output[CW_output$Foliage == 2,]$relaamps, col = "#0ACE79", pch = 18, cex = 2.3)
+points(jitter(CW_output[CW_output$Foliage == 3,]$Distance, .1), CW_output[CW_output$Foliage == 3,]$relaamps, col = "#00693B", pch = 19, cex = 2.3)
 abline(CW_lm1, lwd = 4, col = "#7CFFC6")
 abline(CW_lm2, lwd = 4, col = "#0ACE79")
 abline(CW_lm3, lwd = 4, col = "#00693B")
-legend("bottomleft", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.5, col = c("#7CFFC6", "#0ACE79", "#00693B"))
+legend("bottomleft", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex  = 1.6, col = c("#7CFFC6", "#0ACE79", "#00693B"))
 
 # plot ybc
 plot(YBC_output$Distance, YBC_output$relaamp, col="white",lty="dotted", pch = 16, cex = 1.7,
-     ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), yaxt = "n", main="YBC Amp v Distance", cex.axis = 1.25, cex.lab = 1.5, cex.main = 1.5)
+     ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), yaxt = "n", main="YBC Amp v Distance", cex.axis = 1.8, cex.lab = 1.8, cex.main = 2)
 axis(c(100,10,1,0.1, 0.01), side = 2, at = c(100, 90, 80, 70, 60), las = 1, cex.axis = 1.25)
-points(jitter(YBC_output[YBC_output$Foliage == 1,]$Distance, .1), YBC_output[YBC_output$Foliage == 1,]$relaamps, col = "#FFDE84", pch = 17, cex = 2)
-points(jitter(YBC_output[YBC_output$Foliage == 2,]$Distance, .1), YBC_output[YBC_output$Foliage == 2,]$relaamps, col = "#F0B924", pch = 18, cex = 2)
-points(jitter(YBC_output[YBC_output$Foliage == 3,]$Distance, .1), YBC_output[YBC_output$Foliage == 3,]$relaamps, col = "#9D7300", pch = 19, cex = 2)
+points(jitter(YBC_output[YBC_output$Foliage == 1,]$Distance, .1), YBC_output[YBC_output$Foliage == 1,]$relaamps, col = "#FFDE84", pch = 17, cex = 2.3)
+points(jitter(YBC_output[YBC_output$Foliage == 2,]$Distance, .1), YBC_output[YBC_output$Foliage == 2,]$relaamps, col = "#F0B924", pch = 18, cex = 2.3)
+points(jitter(YBC_output[YBC_output$Foliage == 3,]$Distance, .1), YBC_output[YBC_output$Foliage == 3,]$relaamps, col = "#9D7300", pch = 19, cex = 2.3)
 abline(YBC_lm1, lwd = 4, col = "#FFDE84")
 abline(YBC_lm2, lwd = 4, col = "#F0B924")
 abline(YBC_lm3, lwd = 4, col = "#9D7300")
-legend("bottomleft", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.5, col = c("#FFDE84", "#F0B924", "#9D7300"))
+legend("bottomleft", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex  = 1.6, col = c("#FFDE84", "#F0B924", "#9D7300"))
 
 # plot md
 plot(MD_output$Distance, MD_output$relaamp, col="white",lty="dotted", pch = 16, cex = 1.7, yaxt = "n",
-     ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), main="MD Amp v Distance", cex.axis = 1.25, cex.lab = 1.5, cex.main = 1.5)
+     ylab = "Relative Amplitude (%)", xlab = "Distance (m)", xaxp = c(0, 50, 2), ylim = c(60,100), main="MD Amp v Distance", cex.axis = 1.5, cex.lab = 1.8, cex.main = 2)
 axis(c(100,10,1,0.1, 0.01), side = 2, at = c(100, 90, 80, 70, 60), las = 1, cex.axis = 1.25)
-points(jitter(MD_output[MD_output$Foliage == 1,]$Distance, .1), MD_output[MD_output$Foliage == 1,]$relaamps, col = "#D58DFF", pch = 17, cex = 2)
-points(jitter(MD_output[MD_output$Foliage == 2,]$Distance, .1), MD_output[MD_output$Foliage == 2,]$relaamps, col = "#9715E3", pch = 18, cex = 2)
-points(jitter(MD_output[MD_output$Foliage == 3,]$Distance, .1), MD_output[MD_output$Foliage == 3,]$relaamps, col = "#4C0078", pch = 19, cex = 2)
+points(jitter(MD_output[MD_output$Foliage == 1,]$Distance, .1), MD_output[MD_output$Foliage == 1,]$relaamps, col = "#D58DFF", pch = 17, cex = 2.3)
+points(jitter(MD_output[MD_output$Foliage == 2,]$Distance, .1), MD_output[MD_output$Foliage == 2,]$relaamps, col = "#9715E3", pch = 18, cex = 2.3)
+points(jitter(MD_output[MD_output$Foliage == 3,]$Distance, .1), MD_output[MD_output$Foliage == 3,]$relaamps, col = "#4C0078", pch = 19, cex = 2.3)
 abline(MD_lm1, lwd = 4, col = "#D58DFF")
 abline(MD_lm2, lwd = 4, col = "#9715E3")
 abline(MD_lm3, lwd = 4, col = "#4C0078")
-legend("bottomleft", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.5, col = c("#D58DFF", "#9715E3", "#4C0078"))
+legend("bottomleft", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex  = 1.6, col = c("#D58DFF", "#9715E3", "#4C0078"))
 
 ## plots of different foliage levels 
 
@@ -358,10 +358,10 @@ Slope_foliage1 <- c(-0.6236, -0.4299, -0.5401, -0.1381, -0.1757, -0.1749)
 fol1 <- data.frame(species, freqs, Slope_foliage1)
 fol1lm <- lm(Slope_foliage1 ~ freqs, data=fol1)
 
-plot(fol1$freqs, fol1$Slope_foliage1, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"),lty="dotted", pch = 16, cex = 3, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq (kHz)", main="Foliage 1 (Low)",cex.axis = 1.4, cex.lab = 1.7, cex.main = 1.8, ylim = c(-1.2,0))
+plot(fol1$freqs, fol1$Slope_foliage1, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"),lty="dotted", pch = 16, cex = 3, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq (kHz)", main="Foliage 1 (Low)",cex.axis = 1.5, cex.lab = 1.8, cex.main = 1.9, ylim = c(-1.2,0))
 abline(fol1lm, lwd = 4, col = "black")
-legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ", "CW: 3.00 kHz", "YBC: 1.70 kHz", "MD: 0.50 kHz"), pch = 16, cex = 1.5, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"))
-legend("topright", legend = c("p-val: 0.02543, R2 = 0.7513"), cex = 1.5)
+legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ", "CW: 3.00 kHz", "YBC: 1.70 kHz", "MD: 0.50 kHz"), pch = 16, cex = 1.4, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"))
+legend("topright", legend = c("p-val = 0.025, R2 = 0.75"), cex = 1.4)
 
 # foliage level 2
 species <- c("BG", "AF", "EWP", "CW", "YBC", "MD")
@@ -370,10 +370,10 @@ Slope_foliage2 <- c(-0.2826, -0.5636, -0.7861, -0.2312, -0.1812, -0.2703)
 fol2 <- data.frame(species, freqs, Slope_foliage2)
 fol2lm <- lm(Slope_foliage2 ~ freqs, data=fol2)
 
-plot(fol2$freqs, fol2$Slope_foliage2, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3" ),lty="dotted", pch = 16, cex = 3, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq (kHz)",  main="Foliage 2 (Medium)", cex.axis = 1.4, cex.lab = 1.7, cex.main = 1.8, ylim = c(-1.2,0))
+plot(fol2$freqs, fol2$Slope_foliage2, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3" ),lty="dotted", pch = 16, cex = 3, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq (kHz)",  main="Foliage 2 (Medium)", cex.axis = 1.5, cex.lab = 1.8, cex.main = 1.9, ylim = c(-1.2,0))
 abline(fol2lm, lwd = 4, col = "black")
-legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ", "CW: 3.00 kHz", "YBC: 1.70 kHz", "MD: 0.50 kHz"), pch = 16, cex = 1.5, col = c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3" ))
-legend("topright", legend = c("p-val: 0.4645, R2 = 0.1403"), cex = 1.5)
+legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ", "CW: 3.00 kHz", "YBC: 1.70 kHz", "MD: 0.50 kHz"), pch = 16, cex = 1.4, col = c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3" ))
+legend("topright", legend = c("p-val = 0.464, R2 = 0.14"), cex = 1.4)
 
 # foliage level 3
 species <- c("BG", "AF", "EWP", "CW", "YBC", "MD")
@@ -382,10 +382,10 @@ Slope_foliage3 <- c(-0.5708, -0.6096, -0.9931, -1.052, -0.2027, -0.4556)
 fol3 <- data.frame(species, freqs, Slope_foliage3)
 fol3lm <- lm(Slope_foliage3 ~ freqs, data=fol3)
 
-plot(fol3$freqs, fol3$Slope_foliage3, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"),lty="dotted", pch = 16, cex = 3, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq (kHz)",  main="Foliage 3 (High)", cex.axis = 1.4, cex.lab = 1.7, cex.main = 1.8, ylim = c(-1.2,0))
+plot(fol3$freqs, fol3$Slope_foliage3, col=c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"),lty="dotted", pch = 16, cex = 3, ylab = "Slope of Relative Amp vs Distance", xlab = "Freq (kHz)",  main="Foliage 3 (High)", cex.axis = 1.5, cex.lab = 1.8, cex.main = 1.9, ylim = c(-1.2,0))
 abline(fol3lm, lwd = 4, col = "black")
-legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ", "CW: 3.00 kHz", "YBC: 1.70 kHz", "MD: 0.50 kHz"), pch = 16, cex = 1.5, col = c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"))
-legend("topright", legend = c("p-val: 0.5803, R2 = 0.08278"), cex = 1.5)
+legend("bottomleft", legend = c("BG: 6.88 kHz", "AF: 5.27 kHZ", "EWP: 4.21 kHZ", "CW: 3.00 kHz", "YBC: 1.70 kHz", "MD: 0.50 kHz"), pch = 16, cex = 1.4, col = c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"))
+legend("topright", legend = c("p-val = 0.580, R2 = 0.08"), cex = 1.4)
 
 #########################################################################
 
@@ -444,62 +444,63 @@ par(mfrow=c(2,3))
 
 
 plot(BG_confamp$relaamps, BG_confamp$Confidence, col="white",lty="dotted", pch = 16, cex = 1.7,
-     ylab = "Confidence", xlab = "Relative Amplitude (%)", main="BG Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100)) 
-points(jitter(BG_confamp[BG_confamp$Foliage == 1,]$relaamps, .1), BG_confamp[BG_confamp$Foliage == 1,]$Confidence, col = "#A6D1FF", pch = 17, cex = 2)
-points(jitter(BG_confamp[BG_confamp$Foliage == 2,]$relaamps, .1), BG_confamp[BG_confamp$Foliage == 2,]$Confidence, col = "#4488D2", pch = 18, cex = 2)
-points(jitter(BG_confamp[BG_confamp$Foliage == 3,]$relaamps, .1), BG_confamp[BG_confamp$Foliage == 3,]$Confidence, col = "#003975", pch = 19, cex = 2)
+     ylab = "Confidence", xlab = "Relative Amplitude (%)", main="BG Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100), cex.main = 1.9, cex.axis = 1.7, cex.lab = 2) 
+points(jitter(BG_confamp[BG_confamp$Foliage == 1,]$relaamps, .1), BG_confamp[BG_confamp$Foliage == 1,]$Confidence, col = "#A6D1FF", pch = 17, cex = 2.7)
+points(jitter(BG_confamp[BG_confamp$Foliage == 2,]$relaamps, .1), BG_confamp[BG_confamp$Foliage == 2,]$Confidence, col = "#4488D2", pch = 18, cex = 2.7)
+points(jitter(BG_confamp[BG_confamp$Foliage == 3,]$relaamps, .1), BG_confamp[BG_confamp$Foliage == 3,]$Confidence, col = "#003975", pch = 19, cex = 2.7)
 abline(BG_confamplm, lwd = 4, col = "black")
-legend("bottomright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.2, col = c("#A6D1FF", "#4488D2", "#003975"))
+legend("topleft", legend = c("p-val = 0.88, R2 = 0.31"), cex = 1.6)
 
 # plot AF all foliage
 
 plot(AF_confamp$relaamps,  AF_confamp$Confidence, col="white",lty="dotted", pch = 16, cex = 1.7,
-     xlab = "Relative Amplitude (%)", ylab = "Confidence", main="AF Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100))
-points(jitter(AF_confamp[AF_confamp$Foliage == 1,]$relaamps, .1), AF_confamp[AF_confamp$Foliage == 1,]$Confidence, col = "#FFA555", pch = 17, cex = 2)
-points(jitter(AF_confamp[AF_confamp$Foliage == 2,]$relaamps, .1), AF_confamp[AF_confamp$Foliage == 2,]$Confidence, col = "#FF7700", pch = 18, cex = 2)
-points(jitter(AF_confamp[AF_confamp$Foliage == 3,]$relaamps, .1), AF_confamp[AF_confamp$Foliage == 3,]$Confidence, col = "#8F4300", pch = 19, cex = 2)
+     xlab = "Relative Amplitude (%)", ylab = "Confidence", main="AF Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100), cex.main = 1.9, cex.axis = 1.7, cex.lab = 2)
+points(jitter(AF_confamp[AF_confamp$Foliage == 1,]$relaamps, .1), AF_confamp[AF_confamp$Foliage == 1,]$Confidence, col = "#FFA555", pch = 17, cex = 2.7)
+points(jitter(AF_confamp[AF_confamp$Foliage == 2,]$relaamps, .1), AF_confamp[AF_confamp$Foliage == 2,]$Confidence, col = "#FF7700", pch = 18, cex = 2.7)
+points(jitter(AF_confamp[AF_confamp$Foliage == 3,]$relaamps, .1), AF_confamp[AF_confamp$Foliage == 3,]$Confidence, col = "#8F4300", pch = 19, cex = 2.7)
 abline(AF_confamplm, lwd = 4, col = "black")
-legend("bottomright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.2, col = c("#FFA555", "#FF7700", "#8F4300"))
+legend("bottomleft", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.8, col = c("#9A9A9A","#5F5F5F", "black"))
+legend("topleft", legend = c("p-val = 0.33, R2 = 0.72"), cex = 1.6)
 
 # plot EWP all foliage
 
 plot(EWP_confamp$relaamps,  EWP_confamp$Confidence, col="white",lty="dotted", pch = 16, cex = 1.7,
-     ylab = "Confidence", xlab = "Relative Amplitude (%)", main="EWP Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100))
-points(jitter(EWP_confamp[EWP_confamp$Foliage == 1,]$relaamps, .1), EWP_confamp[EWP_confamp$Foliage == 1,]$Confidence, col = "#FFBED9", pch = 17, cex = 2)
-points(jitter(EWP_confamp[EWP_confamp$Foliage == 2,]$relaamps, .1), EWP_confamp[EWP_confamp$Foliage == 2,]$Confidence, col = "#FD569C", pch = 18, cex = 2)
-points(jitter(EWP_confamp[EWP_confamp$Foliage == 3,]$relaamps, .1), EWP_confamp[EWP_confamp$Foliage == 3,]$Confidence, col = "#870C3F", pch = 19, cex = 2)
+     ylab = "Confidence", xlab = "Relative Amplitude (%)", main="EWP Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100), cex.main = 1.9, cex.axis = 1.7, cex.lab = 2)
+points(jitter(EWP_confamp[EWP_confamp$Foliage == 1,]$relaamps, .1), EWP_confamp[EWP_confamp$Foliage == 1,]$Confidence, col = "#FFBED9", pch = 17, cex = 2.7)
+points(jitter(EWP_confamp[EWP_confamp$Foliage == 2,]$relaamps, .1), EWP_confamp[EWP_confamp$Foliage == 2,]$Confidence, col = "#FD569C", pch = 18, cex = 2.7)
+points(jitter(EWP_confamp[EWP_confamp$Foliage == 3,]$relaamps, .1), EWP_confamp[EWP_confamp$Foliage == 3,]$Confidence, col = "#870C3F", pch = 19, cex = 2.7)
 abline(EWP_confamplm, lwd = 4, col = "black")
-legend("bottomright", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.2, col = c("#FFBED9", "#FD569C", "#870C3F"))
+legend("topleft", legend = c("p-val = 0.17, R2 = 0.62"), cex = 1.6)
 
 # plot CW all foliage
 
 plot(CW_confamp$relaamps,  CW_confamp$Confidence, col="white",lty="dotted", pch = 16, cex = 1.7,
-     ylab = "Confidence", xlab = "Relative Amplitude (%)", main="CW Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100))
-points(jitter(CW_confamp[CW_confamp$Foliage == 1,]$relaamps, .1), CW_confamp[CW_confamp$Foliage == 1,]$Confidence, col = "#7CFFC6", pch = 17, cex = 2)
-points(jitter(CW_confamp[CW_confamp$Foliage == 2,]$relaamps, .1), CW_confamp[CW_confamp$Foliage == 2,]$Confidence, col = "#0ACE79", pch = 18, cex = 2)
-points(jitter(CW_confamp[CW_confamp$Foliage == 3,]$relaamps, .1), CW_confamp[CW_confamp$Foliage == 3,]$Confidence, col = "#00693B", pch = 19, cex = 2)
+     ylab = "Confidence", xlab = "Relative Amplitude (%)", main="CW Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100), cex.main = 1.9, cex.axis = 1.7, cex.lab = 2)
+points(jitter(CW_confamp[CW_confamp$Foliage == 1,]$relaamps, .1), CW_confamp[CW_confamp$Foliage == 1,]$Confidence, col = "#7CFFC6", pch = 17, cex = 2.7)
+points(jitter(CW_confamp[CW_confamp$Foliage == 2,]$relaamps, .1), CW_confamp[CW_confamp$Foliage == 2,]$Confidence, col = "#0ACE79", pch = 18, cex = 2.7)
+points(jitter(CW_confamp[CW_confamp$Foliage == 3,]$relaamps, .1), CW_confamp[CW_confamp$Foliage == 3,]$Confidence, col = "#00693B", pch = 19, cex = 2.7)
 abline(CW_confamplm, lwd = 4, col = "black")
-legend("bottomleft", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.2, col = c("#7CFFC6", "#0ACE79", "#00693B"))
+legend("topleft", legend = c("p-val = 0.016, R2 = 0.63"), cex = 1.6)
 
 # plot YBC all foliage
 
 plot(YBC_confamp$relaamps,  YBC_confamp$Confidence, col="white",lty="dotted", pch = 16, cex = 1.7,
-     ylab = "Confidence", xlab = "Relative Amplitude (%)", main="YBC Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100))
-points(jitter(YBC_confamp[YBC_confamp$Foliage == 1,]$relaamps, .1), YBC_confamp[YBC_confamp$Foliage == 1,]$Confidence, col = "#FFDE84", pch = 17, cex = 2)
-points(jitter(YBC_confamp[YBC_confamp$Foliage == 2,]$relaamps, .1), YBC_confamp[YBC_confamp$Foliage == 2,]$Confidence, col = "#F0B924", pch = 18, cex = 2)
-points(jitter(YBC_confamp[YBC_confamp$Foliage == 3,]$relaamps, .1), YBC_confamp[YBC_confamp$Foliage == 3,]$Confidence, col = "#9D7300", pch = 19, cex = 2)
+     ylab = "Confidence", xlab = "Relative Amplitude (%)", main="YBC Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100), cex.main = 1.9, cex.axis = 1.7, cex.lab = 2)
+points(jitter(YBC_confamp[YBC_confamp$Foliage == 1,]$relaamps, .1), YBC_confamp[YBC_confamp$Foliage == 1,]$Confidence, col = "#FFDE84", pch = 17, cex = 2.7)
+points(jitter(YBC_confamp[YBC_confamp$Foliage == 2,]$relaamps, .1), YBC_confamp[YBC_confamp$Foliage == 2,]$Confidence, col = "#F0B924", pch = 18, cex = 2.7)
+points(jitter(YBC_confamp[YBC_confamp$Foliage == 3,]$relaamps, .1), YBC_confamp[YBC_confamp$Foliage == 3,]$Confidence, col = "#9D7300", pch = 19, cex = 2.7)
 abline(YBC_confamplm, lwd = 4, col = "black")
-legend("topleft", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.2, col = c("#FFDE84", "#F0B924", "#9D7300"))
+legend("topleft", legend = c("p-val = 0.88, R2 = 0.40"), cex = 1.6)
 
 # plot MD all foliage
 
 plot(MD_confamp$relaamps,  MD_confamp$Confidence, col="white",lty="dotted", pch = 16, cex = 1.7,
-     ylab = "Confidence", xlab = "Relative Amplitude (%)", main="MD Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100))
-points(jitter(MD_confamp[MD_confamp$Foliage == 1,]$relaamps, .1), MD_confamp[MD_confamp$Foliage == 1,]$Confidence, col = "#D58DFF", pch = 17, cex = 2)
-points(jitter(MD_confamp[MD_confamp$Foliage == 2,]$relaamps, .1), MD_confamp[MD_confamp$Foliage == 2,]$Confidence, col = "#9715E3", pch = 18, cex = 2)
-points(jitter(MD_confamp[MD_confamp$Foliage == 3,]$relaamps, .1), MD_confamp[MD_confamp$Foliage == 3,]$Confidence, col = "#4C0078", pch = 19, cex = 2)
+     ylab = "Confidence", xlab = "Relative Amplitude (%)", main="MD Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100), cex.main = 1.9, cex.axis = 1.7, cex.lab = 2)
+points(jitter(MD_confamp[MD_confamp$Foliage == 1,]$relaamps, .1), MD_confamp[MD_confamp$Foliage == 1,]$Confidence, col = "#D58DFF", pch = 17, cex = 2.7)
+points(jitter(MD_confamp[MD_confamp$Foliage == 2,]$relaamps, .1), MD_confamp[MD_confamp$Foliage == 2,]$Confidence, col = "#9715E3", pch = 18, cex = 2.7)
+points(jitter(MD_confamp[MD_confamp$Foliage == 3,]$relaamps, .1), MD_confamp[MD_confamp$Foliage == 3,]$Confidence, col = "#4C0078", pch = 19, cex = 2.7)
 abline(MD_confamplm, lwd = 4, col = "black")
-legend("bottomleft", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.2, col = c("#D58DFF", "#9715E3", "#4C0078"))
+legend("topleft", legend = c("p-val = 0.12, R2 = 0.65"), cex = 1.6)
 
 ##############
 ## Linear models

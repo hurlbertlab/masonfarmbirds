@@ -456,13 +456,14 @@ abline(a=0, b = 1)
 FullDataSet_pc_man <- FullDataSet %>%
   filter(totalNum > 4)
 
-plot(FullDataSet_pc_man$DetectedbyManual, FullDataSet_pc_man$DetectedbyObserver, pch = 16)
+plot(FullDataSet_pc_man$DetectedbyManual, FullDataSet_pc_man$DetectedbyObserver, pch = 16, xlab = "Detected by Manual Recording Analysis", ylab="Detected by Point Count Observer")
 text(FullDataSet_pc_man$DetectedbyManual, FullDataSet_pc_man$DetectedbyObserver+3, FullDataSet_pc_man$four_letter, cex = 1)
 abline(a=0, b = 1)
 
 ## GGplot version
 
 ggplot(FullDataSet, aes(x = totalNum, y = DetectedbyBirdNET)) +
+  theme_bw()+
   geom_point(size = 3) +
   geom_abline(a=1, b=0) +
   geom_label_repel(aes(label = four_letter),
@@ -474,16 +475,18 @@ ggplot(FullDataSet, aes(x = totalNum, y = DetectedbyBirdNET)) +
 
 #Graph for BirdNET confidence interval 0, 25, 50 with arrows:
 
-par(mfrow=c(1,1))
+par(mfrow=c(1,1), cex.axis = 1.5, cex.lab = 1.8)
 
 # jitter 
 set.seed(0)
 jitteredx = jitter(FullDataSet$totalNum, )
 
-plot(jitteredx, FullDataSet$n0, pch = 16)
-text(FullDataSet$totalNum, FullDataSet$n0+3, FullDataSet$four_letter, cex = 1)
-arrows(jitteredx, FullDataSet$n0, jitteredx, FullDataSet$n50, length = .1)
-points(jitteredx, FullDataSet$n25, pch = 18, col = 'red')
+plot(jitteredx, FullDataSet$n0, pch = 16, cex = 1.8, ylim = c(0, 110), xlab = "Confirmed Detections", ylab = "BirdNET Detections")
+text(FullDataSet$totalNum, FullDataSet$n0+4, FullDataSet$four_letter, cex = 1)
+segments(jitteredx, FullDataSet$n0, jitteredx, FullDataSet$n50, length = .15)
+points(jitteredx, FullDataSet$n25, pch = 18, cex = 1.8, col = '#FF2727')
+points(jitteredx, FullDataSet$n50, pch = 6, cex = 1.8, col = '#005269')
+legend("topleft", legend = c("No Confidence Threshold", "25% Confidence Threshold", "50% Confidence Threshold"), pch = c(16, 18, 6), cex = 1.2, col = c("black", "#FF2727", "#005269"))
 abline(a=0, b = 1)
 
 # can add line that shows ~% missed/detected
