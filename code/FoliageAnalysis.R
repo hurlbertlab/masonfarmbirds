@@ -449,7 +449,7 @@ points(jitter(BG_confamp[BG_confamp$Foliage == 1,]$relaamps, .1), BG_confamp[BG_
 points(jitter(BG_confamp[BG_confamp$Foliage == 2,]$relaamps, .1), BG_confamp[BG_confamp$Foliage == 2,]$Confidence, col = "#4488D2", pch = 18, cex = 2.7)
 points(jitter(BG_confamp[BG_confamp$Foliage == 3,]$relaamps, .1), BG_confamp[BG_confamp$Foliage == 3,]$Confidence, col = "#003975", pch = 19, cex = 2.7)
 abline(BG_confamplm, lwd = 4, col = "black")
-legend("topleft", legend = c("p = 0.88, R2 = 0.31"), cex = 1.6)
+legend("topleft", legend = c("p = 0.07, R2 = 0.19"), cex = 1.6)
 
 # plot AF all foliage
 
@@ -460,7 +460,7 @@ points(jitter(AF_confamp[AF_confamp$Foliage == 2,]$relaamps, .1), AF_confamp[AF_
 points(jitter(AF_confamp[AF_confamp$Foliage == 3,]$relaamps, .1), AF_confamp[AF_confamp$Foliage == 3,]$Confidence, col = "#8F4300", pch = 19, cex = 2.7)
 abline(AF_confamplm, lwd = 4, col = "black")
 legend("bottomleft", legend = c("Foliage1", "Foliage2", "Foliage3"), pch = c(17, 18, 19), cex = 1.8, col = c("#9A9A9A","#5F5F5F", "black"))
-legend("topleft", legend = c("p = 0.33, R2 = 0.72"), cex = 1.6)
+legend("topleft", legend = c("p = 0.27, R2 = 0.07"), cex = 1.6)
 
 # plot EWP all foliage
 
@@ -470,7 +470,7 @@ points(jitter(EWP_confamp[EWP_confamp$Foliage == 1,]$relaamps, .1), EWP_confamp[
 points(jitter(EWP_confamp[EWP_confamp$Foliage == 2,]$relaamps, .1), EWP_confamp[EWP_confamp$Foliage == 2,]$Confidence, col = "#FD569C", pch = 18, cex = 2.7)
 points(jitter(EWP_confamp[EWP_confamp$Foliage == 3,]$relaamps, .1), EWP_confamp[EWP_confamp$Foliage == 3,]$Confidence, col = "#870C3F", pch = 19, cex = 2.7)
 abline(EWP_confamplm, lwd = 4, col = "black")
-legend("topleft", legend = c("p = 0.17, R2 = 0.62"), cex = 1.6)
+legend("topleft", legend = c("p = 0.06, R2 = 0.19"), cex = 1.6)
 
 # plot CW all foliage
 
@@ -480,7 +480,7 @@ points(jitter(CW_confamp[CW_confamp$Foliage == 1,]$relaamps, .1), CW_confamp[CW_
 points(jitter(CW_confamp[CW_confamp$Foliage == 2,]$relaamps, .1), CW_confamp[CW_confamp$Foliage == 2,]$Confidence, col = "#0ACE79", pch = 18, cex = 2.7)
 points(jitter(CW_confamp[CW_confamp$Foliage == 3,]$relaamps, .1), CW_confamp[CW_confamp$Foliage == 3,]$Confidence, col = "#00693B", pch = 19, cex = 2.7)
 abline(CW_confamplm, lwd = 4, col = "black")
-legend("topleft", legend = c("p = 0.016, R2 = 0.63"), cex = 1.6)
+legend("topleft", legend = c("p = 0.51, R2 = 0.02"), cex = 1.6)
 
 # plot YBC all foliage
 
@@ -490,7 +490,7 @@ points(jitter(YBC_confamp[YBC_confamp$Foliage == 1,]$relaamps, .1), YBC_confamp[
 points(jitter(YBC_confamp[YBC_confamp$Foliage == 2,]$relaamps, .1), YBC_confamp[YBC_confamp$Foliage == 2,]$Confidence, col = "#F0B924", pch = 18, cex = 2.7)
 points(jitter(YBC_confamp[YBC_confamp$Foliage == 3,]$relaamps, .1), YBC_confamp[YBC_confamp$Foliage == 3,]$Confidence, col = "#9D7300", pch = 19, cex = 2.7)
 abline(YBC_confamplm, lwd = 4, col = "black")
-legend("topleft", legend = c("p = 0.88, R2 = 0.40"), cex = 1.6)
+legend("topleft", legend = c("p = 0.48, R2 = 0.03"), cex = 1.6)
 
 # plot MD all foliage
 
@@ -500,7 +500,26 @@ points(jitter(MD_confamp[MD_confamp$Foliage == 1,]$relaamps, .1), MD_confamp[MD_
 points(jitter(MD_confamp[MD_confamp$Foliage == 2,]$relaamps, .1), MD_confamp[MD_confamp$Foliage == 2,]$Confidence, col = "#9715E3", pch = 18, cex = 2.7)
 points(jitter(MD_confamp[MD_confamp$Foliage == 3,]$relaamps, .1), MD_confamp[MD_confamp$Foliage == 3,]$Confidence, col = "#4C0078", pch = 19, cex = 2.7)
 abline(MD_confamplm, lwd = 4, col = "black")
-legend("topleft", legend = c("p = 0.12, R2 = 0.65"), cex = 1.6)
+legend("topleft", legend = c("p = 0.0007, R2 = 0.54"), cex = 1.6)
+
+# Combined
+all_confamp <- rbind(BG_confamp, AF_confamp, EWP_confamp, CW_confamp, YBC_confamp, MD_confamp)
+all_confampplm <- lm(Confidence ~ relaamps, data = all_confamp)
+
+par(mfrow=c(1,1))
+plot(all_confamp$relaamps,  all_confamp$Confidence, col="white",lty="dotted", pch = 16, cex = 1.7,
+     ylab = "BirdNET Confidence", xlab = "Relative Amplitude (%)", main="Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100), cex.main = 1.9, cex.axis = 1.7, cex.lab = 2)
+points(BG_confamp$relaamps, BG_confamp$Confidence, col = "#4488D2", pch = 16, cex = 1.5)
+points(AF_confamp$relaamps, AF_confamp$Confidence, col = "#FF7700", pch = 16, cex = 1.5)
+points(EWP_confamp$relaamps, EWP_confamp$Confidence, col = "#FD569C", pch = 16, cex = 1.5)
+points(CW_confamp$relaamps, CW_confamp$Confidence, col = "#0ACE79", pch = 16, cex = 1.5)
+points(YBC_confamp$relaamps, YBC_confamp$Confidence, col = "#F0B924", pch = 16, cex = 1.5)
+points(MD_confamp$relaamps, MD_confamp$Confidence, col = "#9715E3", pch = 16, cex = 1.5)
+abline(all_confampplm, lwd = 4, col = "black")
+legend("topleft", legend = c("p = 0.006, R2 = 0.06"), cex = 1.5)
+legend(58.45,0.916, legend = c("BG", "AF", "EWP", "CW", "YBC", "MD"), pch = 16, cex = 1.2, col = c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"))
+
+
 
 ##############
 ## Linear models
