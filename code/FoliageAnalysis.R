@@ -518,19 +518,24 @@ points(MD_confamp$relaamps, MD_confamp$Confidence, col = "#9715E3", pch = 16, ce
 abline(all_confampplm, lwd = 4, col = "black")
 legend("topleft", legend = c("p = 0.006, R2 = 0.06"), cex = 1.5)
 legend(58.45,0.916, legend = c("BG", "AF", "EWP", "CW", "YBC", "MD"), pch = 16, cex = 1.2, col = c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"))
-
+#MD only
 plot(all_confamp$relaamps,  all_confamp$Confidence, col="white",lty="dotted", pch = 16, cex = 1.7,
      ylab = "BirdNET Confidence", xlab = "Relative Amplitude (%)", main="Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100), cex.main = 1.9, cex.axis = 1.7, cex.lab = 2)
-points(BG_confamp$relaamps, BG_confamp$Confidence, col = "#4488D2", pch = 16, cex = 1.5)
-points(AF_confamp$relaamps, AF_confamp$Confidence, col = "#FF7700", pch = 16, cex = 1.5)
-points(EWP_confamp$relaamps, EWP_confamp$Confidence, col = "#FD569C", pch = 16, cex = 1.5)
-points(CW_confamp$relaamps, CW_confamp$Confidence, col = "#0ACE79", pch = 16, cex = 1.5)
-points(YBC_confamp$relaamps, YBC_confamp$Confidence, col = "#F0B924", pch = 16, cex = 1.5)
 points(MD_confamp$relaamps, MD_confamp$Confidence, col = "#9715E3", pch = 16, cex = 1.5)
 abline(all_confampplm, lwd = 4, col = "black")
 legend("topleft", legend = c("p = 0.006, R2 = 0.06"), cex = 1.5)
 legend(58.45,0.916, legend = c("BG", "AF", "EWP", "CW", "YBC", "MD"), pch = 16, cex = 1.2, col = c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"))
 abline(MD_confamplm, lwd = 4, col = "#9715E3")
+legend("bottomleft", legend = c("p = 0.0007, R2 = 0.54"), pch = 16, cex = 1.5, col= c("#9715E3") )
+#CW only
+plot(all_confamp$relaamps,  all_confamp$Confidence, col="white",lty="dotted", pch = 16, cex = 1.7,
+     ylab = "BirdNET Confidence", xlab = "Relative Amplitude (%)", main="Relative Amp v Confidence", ylim = c(0, 1), xlim = c(60,100), cex.main = 1.9, cex.axis = 1.7, cex.lab = 2)
+points(CW_confamp$relaamps, CW_confamp$Confidence, col = "#0ACE79", pch = 16, cex = 1.5)
+abline(all_confampplm, lwd = 4, col = "black")
+legend("topleft", legend = c("p = 0.006, R2 = 0.06"), cex = 1.5)
+legend(58.45,0.916, legend = c("BG", "AF", "EWP", "CW", "YBC", "MD"), pch = 16, cex = 1.2, col = c("#4488D2", "#FF7700", "#FD569C", "#0ACE79","#F0B924", "#9715E3"))
+abline(CW_confamplm, lwd = 4, col = "#0ACE79")
+legend("bottomleft", legend = c("p = 0.51, R2 = 0.02"), pch = 16, cex = 1.5, col= c("#0ACE79") )
 
 ##############
 ## Linear models
