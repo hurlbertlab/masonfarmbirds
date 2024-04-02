@@ -490,6 +490,6 @@ legend("topleft", legend = c("No Confidence Threshold", "25% Confidence Threshol
 abline(a=0, b = 1)
 
 # can add line that shows ~% missed/detected
-abline(a=0, b=.67, lty = 'dashed')
-# this shows 2/3
+abline(a=0, b=.2, lty = 'dashed')
+# this shows 1/3
 
