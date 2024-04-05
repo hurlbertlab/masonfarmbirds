@@ -456,9 +456,12 @@ abline(a=0, b = 1)
 FullDataSet_pc_man <- FullDataSet %>%
   filter(totalNum > 4)
 
+pc_man_lm <- lm(FullDataSet_pc_man$DetectedbyObserver ~ FullDataSet_pc_man$DetectedbyManual)
+
 plot(FullDataSet_pc_man$DetectedbyManual, FullDataSet_pc_man$DetectedbyObserver, pch = 16, cex = 1, cex.axis= 1, cex.lab = 1.5, xlab = "Detections by Manual Recording Analysis", ylab="Detections by Point Count Observer")
 text(FullDataSet_pc_man$DetectedbyManual, FullDataSet_pc_man$DetectedbyObserver+3, FullDataSet_pc_man$four_letter, cex = 1)
 abline(a=0, b = 1)
+abline(pc_man_lm, lty = "dashed")
 
 ## GGplot version
 
