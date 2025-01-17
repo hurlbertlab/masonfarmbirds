@@ -9,13 +9,6 @@ library(dplyr)
 library(tidyverse)
 library(beepr)
 
-
-# add really cool code
-
-#lskjfsdflk
-#lkj3lkjlkj
-
-
 ############################################################
 # WREN ANALYSIS
 
