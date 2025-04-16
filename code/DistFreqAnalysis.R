@@ -14,14 +14,19 @@ analysis_table <- analysis_table %>%
                          TRUE ~ as.numeric(as.character(vol))
                          ))
 
+# BG AF EWP CW YBC
+colors_spec = c("#4488D2","#FF7700", "#FD569C", "#0ACE79", "#F0B924")
+
 analysis <- analysis_table %>%
   filter(relative_dir == "N", vol == "100")
-
+speciesColors = data.frame(species = c('BG', 'AF', 'EWP', 'CW5', 'YBC'), 
+                           color = colors_spec,
+                           pch = c(15, 16, 17, 18, 9))
 analysis$relative.amp <- as.numeric(analysis$relative.amp)
 analysis$distance_m <- as.numeric(analysis$distance_m)
 
-# BG AF EWP CW YBC
-colors_spec = c("#4488D2","#FF7700", "#FD569C", "#0ACE79", "#F0B924")
+analysis2 = left_join(analysis, speciesColors, by = 'species')
+
 
 # Create DFs for each species
 
@@ -46,15 +51,23 @@ YBC_analysis <- analysis %>%
   filter(species == "YBC")
 YBCdistMod = lm(log10(relative.amp) ~ distance_m, data = YBC_analysis)
 
-plot(analysis$distance_m, log10(analysis$relative.amp), col="white",lty="dotted", pch = 16, cex = 1.7,
-     ylab = "log10 Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4), ylim = c(-2.3, -0.7), cex.lab = 1.5, main = "Relative Amplitude vs Distance for Different Frequency Bird Vocalizations", cex.main = 1.8, cex.axis = 1.3, yaxt = 'n')
-axis(2, at = log10(c(0.01, 0.03, 0.1, 0.3, 1)), labels = c("1%", "3%", "10%", "30%", "100%"), las = 1, cex.axis = 1.3)
+##############Combine to make figure 4############
+png("plots/Figure4AmpvDis.png", height = 1200, width = 900)
+par(mfrow=c(2,1), mar = c(7, 8, 4, 1), mgp = c(5, 1, 0))
+  #can also make it pdf, specify in inches
+
+
+plot(analysis2$distance_m, log10(analysis2$relative.amp), col = analysis2$color ,lty="dotted", pch = analysis2$pch, cex = 2.5,
+     ylab = "log10 Relative Amplitude", xlab = "Distance (m)", xaxp = c(0, 100, 4), ylim = c(-2.3, -.3), cex.lab = 2.5, cex.axis = 2, yaxt = 'n')
+axis(2, at = log10(c(0.01, 0.03, 0.1, 0.3, 1)), labels = c("1%", "3%", "10%", "30%", "100%"), las = 1, cex.axis = 2)
 abline(BGdistMod, lwd = 4, col = colors_spec[1])
 abline(AFdistMod, lwd = 4, col = colors_spec[2])
 abline(EWPdistMod, lwd = 4, col = colors_spec[3])
 abline(CWdistMod, lwd = 4, col = colors_spec[4])
 abline(YBCdistMod, lwd = 4, col = colors_spec[5])
-legend("topright", legend = c("BG: p = 0.0001, R2 = 0.93", "AF: p = 0.005, R2 = 0.82", "EWP: p = 0.002, R2 = 0.83", "CW: p = 0.002, R2 = 0.82", "YBC: p = 0.0003, R2 = 0.90"), pch = 16, cex = 1.5, col = colors_spec[1:5])
+legend("topright", legend = c("BG: p = 0.0001, R2 = 0.93", "AF: p = 0.005, R2 = 0.82", "EWP: p = 0.002, R2 = 0.83", "CW: p = 0.002, R2 = 0.82", "YBC: p = 0.0003, R2 = 0.90"), pch = speciesColors$pch, cex = 2, col = colors_spec[1:5])
+
+mtext("A", side = 3, adj = 0, line = 1, cex = 3)
 
 species <- c("BG", "AF", "EWP", "CW", "YBC")
 frequencies <- c(6.88, 5.27, 4.21, 3.00, 1.70)
@@ -62,16 +75,23 @@ slope <- c(-0.035, -0.029, -0.028, -0.028, -0.023)
 
 freqvslope <- data.frame(species, frequencies, slope)
 
-par(mfrow=c(1,1), mar = c(5, 7, 5, 1))
 
 freqvslopegraph = lm(slope ~ frequencies, data=freqvslope)
-plot(freqvslope$frequencies, freqvslope$slope, col=c("#4488D2","#FF7700", "#FD569C", "#0ACE79", "#F0B924"), lty="dotted", pch = 16, cex = 2.5,
-      xlab = "", ylab = "", cex.lab = 1.3, cex.axis = 1.3, main = "Slope of Regression for Relative Amplitude vs Distance against Frequency of Bird Vocalization", cex.main = 1.7)
+plot(freqvslope$frequencies, freqvslope$slope, col=c("#4488D2","#FF7700", "#FD569C", "#0ACE79", "#F0B924"), lty="dotted", pch = 16, cex = 3,
+      xlab = "", ylab = "", cex.lab = 2.5, cex.axis = 2)
 abline(freqvslopegraph, lwd = 4, col = "black") 
-title(ylab = "Slope of Relative Amplitude vs Distance Regression", line = 4.3, cex.lab = 1.5)
-title(xlab = "Frequency (kHz)", line = 3, cex.lab = 1.5)
-legend(6.11, -0.02254, legend = c("BG", "AF", "EWP", "CW", "YBC"), pch = 16, cex = 2, col = colors_spec[1:5])
-legend(5.04, -0.02254, legend = c("p = 0.16", "R2 = 0.89"), cex= 1.5)
+title(ylab = "Distance Decay Rate", line = 5, cex.lab = 2.5)
+title(xlab = "Frequency (kHz)", line = 4, cex.lab = 2.5)
+legend("topright", legend = c("BG", "AF", "EWP", "CW", "YBC"), pch = 16, cex = 2, col = colors_spec[1:5])
+text(4, -0.025,"p = 0.16\nR2 = 0.89", cex= 2)
+    ##can also add letter with text
+
+mtext("B", side = 3, adj = 0, line = 1, cex = 3)
+
+
+dev.off()
+
+##################################################
 
 plot(log10(analysis$relative.amp) ~ analysis$distance_m, data = analysis)
 
